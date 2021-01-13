@@ -4,7 +4,7 @@ Java files for cube emulation, cube solving, time/effective turn metric calculat
 
 ## Cube.java
 
-Emulates a Rubik's Cube. Scramble optional.
+Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
 
 ### Constructors
 
