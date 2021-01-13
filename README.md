@@ -14,7 +14,7 @@ Emulates a Rubik's Cube. Scramble optional.
 ### Methods
 
 * *void* `move(String move)` moves a cube by a single Singmaster notated move.
-* *void* `printCube()` "System.out.println"s the colours of a cube as a net.
+* *void* `printCube()` Outputs to console the colours of a cube as a net.
 * *String* `toString()` returns the colours of a cube in a single line.
 * *String* `toString(int face)` returns the colours of a single face in a line.
 * *String* `toString(int face, int row, int cell)` returns the colour of a specific cell.
