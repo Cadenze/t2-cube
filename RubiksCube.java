@@ -32,6 +32,10 @@ public class RubiksCube {
         centres = new String[] { "w", "r", "b", "o", "g", "y"};
     }
 
+    /**
+     * Initializes a cube, scrambled based on a string of instructions
+     * @param instruction The scramble instructions
+     */
     public RubiksCube(String instruction) {
         corners = new Corner[] {
             Corner.WHITE_BLUE_RED, Corner.WHITE_ORANGE_BLUE, Corner.WHITE_GREEN_ORANGE, Corner.WHITE_RED_GREEN,
