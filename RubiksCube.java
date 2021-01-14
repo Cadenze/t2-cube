@@ -8,7 +8,7 @@ public class RubiksCube {
     private String[] centres;
 
     public static void main(String[] args) {
-        RubiksCube pog = new RubiksCube("B' F' U2 L' B U' B D U' R L U2 B F U2 L' R' B' L2 D2");
+        RubiksCube pog = new RubiksCube("z");
 
         pog.printCube();
     }
@@ -155,10 +155,135 @@ public class RubiksCube {
                 }
                 break;
 
+            case "M":
+                for(int i = 0; i < turn; i++) {
+                    spinEdge(0, 2, 10, 8);
+                    spinCentre(0, 3, 5, 1);
+                    
+                    editParity(0);
+                    editParity(2);
+                    editParity(10);
+                    editParity(8);
+                }
+                break;
+            
+            case "E":
+                for(int i = 0; i < turn; i++) {
+                    spinEdge(7, 6, 5, 4);
+                    spinCentre(4, 3, 2, 1);
+
+                    editParity(7);
+                    editParity(6);
+                    editParity(5);
+                    editParity(4);
+                }
+                break;
+
+            case "S":
+                for(int i = 0; i < turn; i++) {
+                    spinEdge(1, 3, 11, 9);
+                    spinCentre(0, 4, 5, 2);
+
+                    editParity(1);
+                    editParity(3);
+                    editParity(11);
+                    editParity(9);
+                }
+                break;
+
+            case "x":
+                for(int i = 0; i < turn; i++) {
+                    spinCorner(1, 0, 4, 5);
+                    spinEdge(1, 4, 9, 5);
+                    spinEdge(0, 8, 10, 2);
+                    spinCentre(0, 1, 5, 3);
+                    spinCorner(3, 7, 6, 2);
+                    spinEdge(3, 7, 11, 6);
+
+                    editSpin(1, +1);
+                    editSpin(0, -1);
+                    editSpin(4, +1);
+                    editSpin(5, -1);
+                    editSpin(3, +1);
+                    editSpin(7, -1);
+                    editSpin(6, +1);
+                    editSpin(2, -1);
+
+                    editParity(0);
+                    editParity(2);
+                    editParity(10);
+                    editParity(8);
+                }
+                break;
+
+            case "y":
+                for(int i = 0; i < turn; i++) {
+                    spinCorner(0, 1, 2, 3);
+                    spinEdge(0, 1, 2, 3);
+                    spinEdge(7, 4, 5, 6);
+                    spinCentre(4, 1, 2, 3);
+                    spinCorner(4, 5, 6, 7);
+                    spinEdge(8, 9, 10, 11);
+
+                    editParity(7);
+                    editParity(6);
+                    editParity(5);
+                    editParity(4);
+                }
+                break;
+
+            case "z":
+                for(int i = 0; i < turn; i++) {
+                    spinCorner(0, 3, 7, 4);
+                    spinEdge(0, 7, 8, 4);
+                    spinEdge(1, 3, 11, 9);
+                    spinCentre(0, 4, 5, 2);
+                    spinCorner(2, 6, 5, 1);
+                    spinEdge(2, 6, 10, 5);
+
+                    editSpin(2, +1);
+                    editSpin(1, -1);
+                    editSpin(5, +1);
+                    editSpin(6, -1);
+                    editSpin(0, +1);
+                    editSpin(3, -1);
+                    editSpin(7, +1);
+                    editSpin(4, -1);
+
+                    editParity(0);
+                    editParity(7);
+                    editParity(8);
+                    editParity(4);
+                    editParity(1);
+                    editParity(3);
+                    editParity(11);
+                    editParity(9);
+                    editParity(2);
+                    editParity(5);
+                    editParity(10);
+                    editParity(6);
+                }
+                break;
+
             default:
                 System.out.println("turnFace error.");
                 break;
         }
+    }
+
+    /**
+     * Spins 4 centres 90 degrees clockwise
+     * @param twelve o'clock position
+     * @param nine o'clock position
+     * @param six o'clock position
+     * @param three o'clock position
+     */
+    private void spinCentre(int twelve, int nine, int six, int three) {
+        String temp = centres[twelve];
+        centres[twelve] = centres[nine];
+        centres[nine] = centres[six];
+        centres[six] = centres[three];
+        centres[three] = temp;
     }
 
     /**
