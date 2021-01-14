@@ -27,16 +27,16 @@ public enum Edge {
     public String colour(int number) {
         return colour(true, number);
     }
-    
+
     public String colour(boolean parity, int number) {
         if(parity) {
             if(number == 0) { return colour; }
             else if (number == 1) { return colour1; }
-            else { return ERROR; }
+            else { System.out.println(ERROR); return "E"; }
         } else {
             if(number == 0) { return colour1; }
             else if (number == 1) { return colour; }
-            else { return ERROR; }
+            else { System.out.println(ERROR); return "E"; }
         }
     }
 }

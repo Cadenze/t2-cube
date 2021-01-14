@@ -26,7 +26,7 @@ public enum Corner {
         if(number == 0)      { return colour; }
         else if(number == 1) { return colour1; }
         else if(number == 2) { return colour2; }
-        else                 { return ERROR; }
+        else { System.out.println(ERROR); return "E"; }
     }
 
     public String colour(int spin, int number) {
@@ -38,16 +38,17 @@ public enum Corner {
                 if(number == 0)      { return colour2; }
                 else if(number == 1) { return colour; }
                 else if(number == 2) { return colour1; }
-                else                 { return ERROR; }
+                else { System.out.println(ERROR); return "E"; }
 
             case 2:
                 if(number == 0)      { return colour1; }
                 else if(number == 1) { return colour2; }
                 else if(number == 2) { return colour; }
-                else                 { return ERROR; }
+                else { System.out.println(ERROR); return "E"; }
 
             default:
-                return ERROR;
+                System.out.println(ERROR);
+                return "E";
         }
     }
 }
