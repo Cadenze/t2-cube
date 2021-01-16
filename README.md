@@ -15,8 +15,18 @@ Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
 
 * *String*[][] `compileCube()` generates 6 arrays representing the colours of the cube.
 * *String*[] `compileFace()` generates an array of colours.
+* *int* `findCentre(String colour)` finds the face of a centre.
+* *int* `findCorner(Corner cubelet)` finds the position of a corner.
+* *int* `findCorner(Corner cubelet, int start, int stop)` fancy findCorner.
+* *int* `findEdge(Edge cubelet)` finds the position of an edge.
+* *int* `findEdge(Edge cubelet, int start, int stop)` fancy findEdge.
+* *String* `getCentre(int face)` get centre from face.
+* *Corner* `getCorner(int position)` get corner from position.
+* *Edge* `getEdge(int position)` get edge from position.
+* *boolean* `getParity(int position)` get parity from position.
+* *int* `getSpin(int position)` get spin from position.
 * *void* `move(String move)` moves a cube by a single Singmaster notated move.
-* *void* `printCube()` Outputs to console the colours of a cube as a net.
+* *void* `printCube()` outputs to console the colours of a cube as a net.
 * *String* `toString()` returns the colours of a cube in a single line.
 * *String* `toString(int face)` returns the colours of a single face in a line.
 * *String* `toString(int face, int cell)` returns the colour of a specific cell.

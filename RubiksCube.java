@@ -1,5 +1,8 @@
 import java.util.Arrays;
 
+/**
+ * Emulation of a Rubik's cube in terms of its "cubelets".
+ */
 public class RubiksCube {
     private Corner[] corners;
     private int[] spin;       /* 0 spin is white/yellow side up/down, count clockwise */
@@ -8,11 +11,9 @@ public class RubiksCube {
     private String[] centres;
 
     public static void main(String[] args) {
-        RubiksCube pog = new RubiksCube("z");
-
+        RubiksCube pog = new RubiksCube("R");
         pog.printCube();
     }
-
     /**
      * Initializes a solved cube.
      */
@@ -37,24 +38,8 @@ public class RubiksCube {
      * @param instruction The scramble instructions
      */
     public RubiksCube(String instruction) {
-        corners = new Corner[] {
-            Corner.WHITE_BLUE_RED, Corner.WHITE_ORANGE_BLUE, Corner.WHITE_GREEN_ORANGE, Corner.WHITE_RED_GREEN,
-            Corner.YELLOW_RED_BLUE, Corner.YELLOW_BLUE_ORANGE, Corner.YELLOW_ORANGE_GREEN, Corner.YELLOW_GREEN_RED
-        };
-        spin = new int[8];
-        edges = new Edge[] {
-            Edge.WHITE_RED, Edge.WHITE_BLUE, Edge.WHITE_ORANGE, Edge.WHITE_GREEN,
-            Edge.RED_BLUE, Edge.ORANGE_BLUE, Edge.ORANGE_GREEN, Edge.RED_GREEN,
-            Edge.YELLOW_RED, Edge.YELLOW_BLUE, Edge.YELLOW_ORANGE, Edge.YELLOW_GREEN
-        };
-        parity = new boolean[12];
-        Arrays.fill(parity, true);
-        centres = new String[] { "w", "r", "b", "o", "g", "y"};
-
-        String[] instructions = instruction.split(" ");
-        for(int i = 0; i < instructions.length; i++) {
-            move(instructions[i]);
-        }
+        this();
+        moves(instruction);
     }
 
     /**
@@ -74,6 +59,17 @@ public class RubiksCube {
         }
 
         turnFace(face, turn);
+    }
+
+    /**
+     * Takes in multiple moves, parses the notation, and then executes the moves
+     * @param instruction Singmaster notation for multiple moves
+     */
+    public void moves(String instruction) {
+        String[] instructions = instruction.split(" ");
+        for(int i = 0; i < instructions.length; i++) {
+            move(instructions[i]);
+        }
     }
 
     /**
@@ -371,6 +367,115 @@ public class RubiksCube {
      */
     private void editParity(int edge) {
         parity[edge] = !parity[edge];
+    }
+
+    /**
+     * Returns the corner at a specified position.
+     * @param position Position of corner
+     * @return The colours of the corner
+     */
+    public Corner getCorner(int position) {
+        return corners[position];
+    }
+
+    /**
+     * Returns the spin of the corner at a specified position.
+     * @param position Position of corner
+     * @return The spin of a corner
+     */
+    public int getSpin(int position) {
+        return spin[position];
+    }
+
+    /**
+     * Returns the edge at a specified position.
+     * @param position Position of edge
+     * @return The colours of an edge
+     */
+    public Edge getEdge(int position) {
+        return edges[position];
+    }
+
+    /**
+     * Returns the centre at a specified face.
+     * @param face Specified face
+     * @return The colour of the centre
+     */
+    public String getCentre(int face) {
+        return centres[face];
+    }
+
+    /**
+     * Returns the parity of the edge at a specified position.
+     * @param position Position of edge
+     * @return The parity of an edge
+     */
+    public boolean getParity(int position) {
+        return parity[position];
+    }
+
+    /**
+     * Returns the position of a specified corner piece.
+     * @param cubelet Corner piece
+     * @return Position of piece
+     */
+    public int findCorner(Corner cubelet) {
+        return findCorner(cubelet, 0, 8);
+    }
+
+    /**
+     * Returns the position of a specified corner piece, within parameters.
+     * @param cubelet Corner piece
+     * @param start Beginning of search position (inclusive)
+     * @param stop End of search position (non-inclusive)
+     * @return Position of piece
+     */
+    public int findCorner(Corner cubelet, int start, int stop) {
+        for(int i = start; i < stop; i++) {
+            if(cubelet == corners[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the position of a specified edge piece.
+     * @param cubelet Edge piece
+     * @return Position of piece
+     */
+    public int findEdge(Edge cubelet) {
+        return findEdge(cubelet, 0, 12);
+    }
+
+    /**
+     * Returns the position of a specifed edge piece, within parameters.
+     * @param cubelet Edge piece
+     * @param start Beginning of search position (inclusive)
+     * @param stop End of search position (non-inclusive)
+     * @return Position of piece
+     */
+    public int findEdge(Edge cubelet, int start, int stop) {
+        for(int i = start; i < stop; i++) {
+            if(cubelet == edges[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the face that the specified colour centre is located.
+     * @param colour Colour of the centre piece
+     * @return Face of a cube
+     */
+    public int findCentre(String colour) {
+        for(int i = 0; i < 6; i++) {
+            if(colour.equals(centres[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
