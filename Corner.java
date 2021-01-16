@@ -16,12 +16,23 @@ public enum Corner {
     private final String colour2;
     private static final String ERROR = "corner colour error.";
 
+    /**
+     * Initializes the three colours of a corner.
+     * @param c Colour at up;
+     * @param c1 Colour at right;
+     * @param c2 Colour at front;
+     */
     Corner(String c, String c1, String c2) {
         colour = c;
         colour1 = c1;
         colour2 = c2;
     }
 
+    /**
+     * Retrieves the colour of a direction.
+     * @param number Direction
+     * @return Colour
+     */
     public String colour(int number) {
         if(number == 0)      { return colour; }
         else if(number == 1) { return colour1; }
@@ -29,6 +40,12 @@ public enum Corner {
         else { System.out.println(ERROR); return "E"; }
     }
 
+    /**
+     * Retrieves the colour, after a specified spin, of a direction.
+     * @param spin Spin number
+     * @param number Direction
+     * @return Colour
+     */
     public String colour(int spin, int number) {
         switch(spin) {
             case 0:

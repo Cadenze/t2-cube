@@ -19,15 +19,31 @@ public enum Edge {
     private final String colour1;
     private static final String ERROR = "edge colour error.";
 
+    /**
+     * Initializes the two colours of an edge.
+     * @param c Main colour
+     * @param d Secondary colour
+     */
     Edge(String c, String d) {
         colour = c;
         colour1 = d;
     }
 
+    /**
+     * Retrieves the colour of a direction.
+     * @param number Direction
+     * @return Colour
+     */
     public String colour(int number) {
         return colour(true, number);
     }
 
+    /**
+     * Retrieves the colour, at a specified parity, of a direction.
+     * @param parity True/false parity
+     * @param number Direction
+     * @return Colour
+     */
     public String colour(boolean parity, int number) {
         if(parity) {
             if(number == 0) { return colour; }
