@@ -471,4 +471,28 @@ public class Solve extends RubiksCube {
         }
         return count;
     }
+
+    /**
+     * Returns the Quarter Turn Metric.
+     * @return QTM
+     */
+    public int getQTM() {
+        return qtm;
+    }
+
+    /**
+     * Returns the Half Turn Metric.
+     * @return HTM
+     */
+    public int getHTM() {
+        return htm;
+    }
+
+    /**
+     * Returns the Slice Turn Metric
+     * @return STM
+     */
+    public int getSTM() {
+        return stm;
+    }
 }
