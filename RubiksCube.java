@@ -47,9 +47,8 @@ public class RubiksCube {
      * @param move Singmaster notation for a single move
      */
     public void move(String move) {
-        String face = "";
+        String face = move.substring(0,1);
         int turn = 0;
-        face = move.substring(0,1);
         if(move.length() == 1) {
             turn = 1;
         } else if(move.substring(1).equals("2")) {
