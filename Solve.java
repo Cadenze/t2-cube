@@ -53,6 +53,9 @@ public class Solve extends RubiksCube {
         move("x2"); /* yellow on top for ease of every step after */
     }
 
+    /**
+     * Inserts the White-Red edge.
+     */
     private void crossRed() {
         int position = findEdge(Edge.WHITE_RED);
         if(getParity(position)) {
@@ -139,6 +142,9 @@ public class Solve extends RubiksCube {
         }
     }
     
+    /**
+     * Inserts the White-Blue edge.
+     */
     private void crossBlue() {
         int position = findEdge(Edge.WHITE_BLUE);
         if(getParity(position)) {
@@ -219,6 +225,9 @@ public class Solve extends RubiksCube {
         }
     }
 
+    /**
+     * Inserts the White-Orange edge.
+     */
     private void crossOrange() {
         int position = findEdge(Edge.WHITE_ORANGE);
         if(getParity(position)) {
@@ -293,6 +302,9 @@ public class Solve extends RubiksCube {
         }
     }
 
+    /**
+     * Inserts the White-Green edge.
+     */
     private void crossGreen() {
         int position = findEdge(Edge.WHITE_GREEN);
         if(getParity(position)) {
@@ -375,9 +387,9 @@ public class Solve extends RubiksCube {
      * Updates metrics, moves, and stores the moves for cross.
      * @param moves Singmaster notation for multiple moves
      */
-    public void updateCross(String moves) {
+    private void updateCross(String moves) {
         moves(moves);
-        updateCross(moves);
+        updateMetrics(moves);
         if(!movesCross.equals("") && !movesCross.endsWith(" ")) {
             movesCross += " ";
         }

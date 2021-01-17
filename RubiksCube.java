@@ -9,11 +9,7 @@ public class RubiksCube {
     private Edge[] edges;
     private boolean[] parity; /* true parity is for white/yellow/(red) facing white/yellow/(red) */
     private String[] centres;
-
-    public static void main(String[] args) {
-        RubiksCube pog = new RubiksCube("R");
-        pog.printCube();
-    }
+}
     /**
      * Initializes a solved cube.
      */

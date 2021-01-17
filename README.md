@@ -32,6 +32,27 @@ Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
 * *String* `toString(int face)` returns the colours of a single face in a line.
 * *String* `toString(int face, int cell)` returns the colour of a specific cell.
 
+## Solve.java
+
+Solves a Rubik's Cube with the Beginner's Layer-by-layer method.
+
+### Constructors
+
+* `Solve()` does nothing.
+* `Solve(String instructions)` solves a cube, scrambled using instructions.
+
+### Methods
+
+* *int* `countHTM(String moves)` returns the half turn metric of the given moves.
+* *int* `countQTM(String moves)` returns the quarter turn metric of the given moves.
+* *int* `countSTM(String moves)` returns the slice turn metric of the given moves.
+* *void* `cross()` creates a white cross.
+* *int* `getHTM()` retrieves the current half turn metric.
+* *int* `getQTM()` retrieves the current quarter turn metric.
+* *int* `getSTM()` retrieves the current slice turn metric.
+* *void* `solve()` solves a cube using the beginner's method.
+* *void* `updateMetrics(String moves)` adds to the metrics given a set of moves.
+
 ## Cube.java (deprecated)
 
 Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
