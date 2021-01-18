@@ -9,7 +9,7 @@ public class RubiksCube {
     private Edge[] edges;
     private boolean[] parity; /* true parity is for white/yellow/(red) facing white/yellow/(red) */
     private String[] centres;
-}
+
     /**
      * Initializes a solved cube.
      */
