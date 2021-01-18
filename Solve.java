@@ -2,7 +2,7 @@ public class Solve extends RubiksCube {
     private int qtm;
     private int htm;
     private int stm;
-    private String movesCross;
+    private String movesFirst;
 
     /**
      * Initializes a solved cube and then solves it. (No work done)
@@ -12,7 +12,7 @@ public class Solve extends RubiksCube {
         qtm = 0;
         htm = 0;
         stm = 0;
-        movesCross = "";
+        movesFirst = "";
         solve();
     }
 
@@ -25,7 +25,7 @@ public class Solve extends RubiksCube {
         qtm = 0;
         htm = 0;
         stm = 0;
-        movesCross = "";
+        movesFirst = "";
         solve();
     }
 
@@ -50,7 +50,6 @@ public class Solve extends RubiksCube {
         crossBlue();
         crossOrange();
         crossGreen();
-        move("x2"); /* yellow on top for ease of every step after */
     }
 
     /**
@@ -63,37 +62,37 @@ public class Solve extends RubiksCube {
                 case(0):
                     break;
                 case(1):
-                    updateCross("U");
+                    updateFirst("U");
                     break;
                 case(2):
-                    updateCross("U2");
+                    updateFirst("U2");
                     break;
                 case(3):
-                    updateCross("U'");
+                    updateFirst("U'");
                     break;
                 case(4):
-                    updateCross("R U");
+                    updateFirst("R U");
                     break;
                 case(5):
-                    updateCross("R' U");
+                    updateFirst("R' U");
                     break;
                 case(6):
-                    updateCross("L U'");
+                    updateFirst("L U'");
                     break;
                 case(7):
-                    updateCross("L' U'");
+                    updateFirst("L' U'");
                     break;
                 case(8):
-                    updateCross("F2");
+                    updateFirst("F2");
                     break;
                 case(9):
-                    updateCross("D' F2");
+                    updateFirst("D' F2");
                     break;
                 case(10):
-                    updateCross("D2 F2");
+                    updateFirst("D2 F2");
                     break;
                 case(11):
-                    updateCross("D F2");
+                    updateFirst("D F2");
                     break;
                 default:
                     System.out.println("red cross error.");
@@ -101,40 +100,40 @@ public class Solve extends RubiksCube {
         } else {
             switch(position) {
                 case(0):
-                    updateCross("F R U");
+                    updateFirst("F R U");
                     break;
                 case(1):
-                    updateCross("R' F'");
+                    updateFirst("R' F'");
                     break;
                 case(2):
-                    updateCross("B L U'");
+                    updateFirst("B L U'");
                     break;
                 case(3):
-                    updateCross("L F");
+                    updateFirst("L F");
                     break;
                 case(4):
-                    updateCross("F'");
+                    updateFirst("F'");
                     break;
                 case(5):
-                    updateCross("R2 F'");
+                    updateFirst("R2 F'");
                     break;
                 case(6):
-                    updateCross("L2 F");
+                    updateFirst("L2 F");
                     break;
                 case(7):
-                    updateCross("F");
+                    updateFirst("F");
                     break;
                 case(8):
-                    updateCross("D R F'");
+                    updateFirst("D R F'");
                     break;
                 case(9):
-                    updateCross("R F'");
+                    updateFirst("R F'");
                     break;
                 case(10):
-                    updateCross("D' R F'");
+                    updateFirst("D' R F'");
                     break;
                 case(11):
-                    updateCross("L' F");
+                    updateFirst("L' F");
                     break;
                 default:
                     System.out.println("red cross error.");
@@ -152,34 +151,34 @@ public class Solve extends RubiksCube {
                 case(1):
                     break;                
                 case(2):
-                    updateCross("B2 D' R2");
+                    updateFirst("B2 D' R2");
                     break;
                 case(3):
-                    updateCross("L2 D2 R2");
+                    updateFirst("L2 D2 R2");
                     break;               
                 case(4):
-                    updateCross("R");
+                    updateFirst("R");
                     break;
                 case(5):
-                    updateCross("R'");
+                    updateFirst("R'");
                     break;
                 case(6):
-                    updateCross("B2 R'");
+                    updateFirst("B2 R'");
                     break;
                 case(7):
-                    updateCross("L D2 R2");
+                    updateFirst("L D2 R2");
                     break;               
                 case(8):
-                    updateCross("D R2");
+                    updateFirst("D R2");
                     break;
                 case(9):
-                    updateCross("R2");
+                    updateFirst("R2");
                     break;
                 case(10):
-                    updateCross("D' R2");
+                    updateFirst("D' R2");
                     break;
                 case(11):
-                    updateCross("D2 R2");
+                    updateFirst("D2 R2");
                     break; 
                 default:
                     System.out.println("blue cross error.");
@@ -187,37 +186,37 @@ public class Solve extends RubiksCube {
         } else {
             switch(position) {
                 case(1):
-                    updateCross("R U' B U");
+                    updateFirst("R U' B U");
                     break;
                 case(2):
-                    updateCross("B' R");
+                    updateFirst("B' R");
                     break;
                 case(3):
-                    updateCross("L U F U'");
+                    updateFirst("L U F U'");
                     break;
                 case(4):
-                    updateCross("U F' U'");
+                    updateFirst("U F' U'");
                     break;
                 case(5):
-                    updateCross("U' B U");
+                    updateFirst("U' B U");
                     break;
                 case(6):
-                    updateCross("U' B' U");
+                    updateFirst("U' B' U");
                     break;
                 case(7):
-                    updateCross("U F U'");
+                    updateFirst("U F U'");
                     break;
                 case(8):
-                    updateCross("F' R F");
+                    updateFirst("F' R F");
                     break;
                 case(9):
-                    updateCross("D B R'");
+                    updateFirst("D B R'");
                     break;
                 case(10):
-                    updateCross("B R'");
+                    updateFirst("B R'");
                     break;
                 case(11):
-                    updateCross("D' B R'");
+                    updateFirst("D' B R'");
                     break;
                 default:
                     System.out.println("blue cross error.");
@@ -235,31 +234,31 @@ public class Solve extends RubiksCube {
                 case(2):
                     break;
                 case(3):
-                    updateCross("L2 D' B2");
+                    updateFirst("L2 D' B2");
                     break;               
                 case(4):
-                    updateCross("R' D R B2");
+                    updateFirst("R' D R B2");
                     break;
                 case(5):
-                    updateCross("U R' U'");
+                    updateFirst("U R' U'");
                     break;
                 case(6):
-                    updateCross("U' L U");
+                    updateFirst("U' L U");
                     break;
                 case(7):
-                    updateCross("U' L' U");
+                    updateFirst("U' L' U");
                     break;               
                 case(8):
-                    updateCross("D2 B2");
+                    updateFirst("D2 B2");
                     break;
                 case(9):
-                    updateCross("D B2");
+                    updateFirst("D B2");
                     break;
                 case(10):
-                    updateCross("B2");
+                    updateFirst("B2");
                     break;
                 case(11):
-                    updateCross("D2' B2");
+                    updateFirst("D2' B2");
                     break; 
                 default:
                     System.out.println("orange cross error.");
@@ -267,34 +266,34 @@ public class Solve extends RubiksCube {
         } else {
             switch(position) {
                 case(2):
-                    updateCross("B U' L U");
+                    updateFirst("B U' L U");
                     break;
                 case(3):
-                    updateCross("L' B'");
+                    updateFirst("L' B'");
                     break;
                 case(4):
-                    updateCross("F D2 F' B2");
+                    updateFirst("F D2 F' B2");
                     break;
                 case(5):
-                    updateCross("B");
+                    updateFirst("B");
                     break;
                 case(6):
-                    updateCross("B'");
+                    updateFirst("B'");
                     break;
                 case(7):
-                    updateCross("L2 B'");
+                    updateFirst("L2 B'");
                     break;
                 case(8):
-                    updateCross("D' L B'");
+                    updateFirst("D' L B'");
                     break;
                 case(9):
-                    updateCross("D2 L B'");
+                    updateFirst("D2 L B'");
                     break;
                 case(10):
-                    updateCross("D L B'");
+                    updateFirst("D L B'");
                     break;
                 case(11):
-                    updateCross("L B'");
+                    updateFirst("L B'");
                     break;
                 default:
                     System.out.println("orange cross error.");
@@ -312,28 +311,28 @@ public class Solve extends RubiksCube {
                 case(3):
                     break;               
                 case(4):
-                    updateCross("R' D2 R L2");
+                    updateFirst("R' D2 R L2");
                     break;
                 case(5):
-                    updateCross("R D2 R' L2");
+                    updateFirst("R D2 R' L2");
                     break;
                 case(6):
-                    updateCross("L");
+                    updateFirst("L");
                     break;
                 case(7):
-                    updateCross("L'");
+                    updateFirst("L'");
                     break;               
                 case(8):
-                    updateCross("D' L2");
+                    updateFirst("D' L2");
                     break;
                 case(9):
-                    updateCross("D2 L2");
+                    updateFirst("D2 L2");
                     break;
                 case(10):
-                    updateCross("D L2");
+                    updateFirst("D L2");
                     break;
                 case(11):
-                    updateCross("L2");
+                    updateFirst("L2");
                     break; 
                 default:
                     System.out.println("green cross error.");
@@ -341,35 +340,81 @@ public class Solve extends RubiksCube {
         } else {
             switch(position) {
                 case(3):
-                    updateCross("L U' F U");
+                    updateFirst("L U' F U");
                     break;
                 case(4):
-                    updateCross("F D' F' L2");
+                    updateFirst("F D' F' L2");
                     break;
                 case(5):
-                    updateCross("B' D B L2");
+                    updateFirst("B' D B L2");
                     break;
                 case(6):
-                    updateCross("U B' U'");
+                    updateFirst("U B' U'");
                     break;
                 case(7):
-                    updateCross("U' F U");
+                    updateFirst("U' F U");
                     break;
                 case(8):
-                    updateCross("F L' F'");
+                    updateFirst("F L' F'");
                     break;
                 case(9):
-                    updateCross("D' F L F'");
+                    updateFirst("D' F L F'");
                     break;
                 case(10):
-                    updateCross("B' L B");
+                    updateFirst("B' L B");
                     break;
                 case(11):
-                    updateCross("D F L F'");
+                    updateFirst("D F L F'");
                     break;
                 default:
                     System.out.println("green cross error.");
             }
+        }
+    }
+
+    public void corners() {
+        corner0();
+        corner1();
+        corner2();
+        corner3();
+    }
+
+    private void corner0() {
+        int position = findCorner(Corner.WHITE_BLUE_RED);
+        int spin = getSpin(position);
+        String error = "corner 0 error.";
+        if(spin == 0) {
+            switch(position) {
+                case 0:
+                    break;
+                case 1:
+                    updateFirst("B' D2 B R' D R");
+                    break;
+                case 2:
+                    updateFirst("L' D2 L D' R' D R");
+                    break;
+                case 3:
+                    updateFirst("F' D' F R' D2 R");
+                    break;
+                case 4:
+                    updateFirst("R' D2 R D R' D' R");
+                    break;
+                case 5:
+                    updateFirst("R D' R2 D R");
+                    break;
+                case 6:
+                    updateFirst("B D2 B' R' D R");
+                    break;
+                case 7:
+                    updateFirst("F' D F D' R' D' R");
+                    break;
+                default:
+                    System.out.println(error);
+            }
+        } else if(spin == 1) {
+
+        } else {
+
         }
     }
 
@@ -387,13 +432,13 @@ public class Solve extends RubiksCube {
      * Updates metrics, moves, and stores the moves for cross.
      * @param moves Singmaster notation for multiple moves
      */
-    private void updateCross(String moves) {
+    private void updateFirst(String moves) {
         moves(moves);
         updateMetrics(moves);
-        if(!movesCross.equals("") && !movesCross.endsWith(" ")) {
-            movesCross += " ";
+        if(!movesFirst.equals("") && !movesFirst.endsWith(" ")) {
+            movesFirst += " ";
         }
-        movesCross += moves;
+        movesFirst += moves;
     }
 
     /**
