@@ -395,7 +395,7 @@ public class Solve extends RubiksCube {
     private void cornerInsert(Corner cubelet, int iteration) {
         int position = findCorner(cubelet);
         int spin = getSpin(position);
-        String error = "corner " + iteration + " error.";
+        final String error = "corner " + iteration + " error.";
         if(spin == 0) {
             switch(position) {
                 case 0:
@@ -504,7 +504,7 @@ public class Solve extends RubiksCube {
      * @param natural Natural parity of face; true for red/orange, false for blue/green
      */
     private void edgeInsert(Edge cubelet, boolean natural) {
-        String error = "second layer error.";
+        final String error = "second layer error.";
         int position = findEdge(cubelet);
         if(getParity(position) == natural) {
             switch(position) {
@@ -584,6 +584,9 @@ public class Solve extends RubiksCube {
         }
     }
 
+    /**
+     * Creates a yellow face on top.
+     */
     public void oll2() {
         int[] spin = new int[4];
         int zeroes = 0;
@@ -592,13 +595,24 @@ public class Solve extends RubiksCube {
             if(spin[i] == 0) { zeroes++; }
         }
 
-        if(zeroes == 0) {
+        /* Trust the natural recursion. */
+        final String sune = "R U R' U R U2 R'";
+        int spinToFind;
+        if(zeroes == 0) { spinToFind = 2; }
+        else if(zeroes == 1) { spinToFind = 0; }
+        else if(zeroes == 2) { spinToFind = 1; }
+        else { return; }
 
-        } else if(zeroes == 1) {
+        if(spin[3] == spinToFind) { updateThird(sune); }
+        else if(spin[0] == spinToFind) { updateThird("U " + sune); }
+        else if(spin[2] == spinToFind) { updateThird("U' " + sune); }
+        else { updateThird("U2 " + sune); }
 
-        } else if(zeroes == 2) {
-            
-        }
+        oll2();
+    }
+
+    public void pll1() {
+        while(
     }
 
     /**
