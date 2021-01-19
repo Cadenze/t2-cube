@@ -492,79 +492,136 @@ public class RubiksCube {
      */
     public String[] compileFace(int face) {
         String[] cell = new String[9];
-        cell[4] = centres[face];
+        for(int i = 0; i < 9; i++) {
+            cell[i] = compileCell(face, i);
+        }
+        return cell;
+    }
+
+    /**
+     * Returns the colour of a cell
+     * @param face
+     * @param cell
+     * @return A string representing colour
+     */
+    public String compileCell(int face, int cell) {
+        final String error = "compileCell error.";
+        if(cell == 4) {
+            return centres[face];
+        }
+
         switch(face) {
             case 0:
-                cell[0] = corners[2].colour(spin[2], 0);
-                cell[1] = edges[2].colour(parity[2], 0);
-                cell[2] = corners[1].colour(spin[1], 0);
-                cell[3] = edges[3].colour(parity[3], 0);
-                cell[5] = edges[1].colour(parity[1], 0);
-                cell[6] = corners[3].colour(spin[3], 0);
-                cell[7] = edges[0].colour(parity[0], 0);
-                cell[8] = corners[0].colour(spin[0], 0);
+                switch(cell) {
+                    case 0: return corners[2].colour(spin[2], 0);
+                    case 1: return edges[2].colour(parity[2], 0);
+                    case 2: return corners[1].colour(spin[1], 0);
+                    case 3: return edges[3].colour(parity[3], 0);
+                    case 5: return edges[1].colour(parity[1], 0);
+                    case 6: return corners[3].colour(spin[3], 0);
+                    case 7: return edges[0].colour(parity[0], 0);
+                    case 8: return corners[0].colour(spin[0], 0);
+                    default: System.out.println(error);
+                }
                 break;
 
             case 1:
-                cell[0] = corners[3].colour(spin[3], 1);
-                cell[1] = edges[0].colour(parity[0], 1);
-                cell[2] = corners[0].colour(spin[0], 2);
-                cell[3] = edges[7].colour(parity[7], 0);
-                cell[5] = edges[4].colour(parity[4], 0);
-                cell[6] = corners[7].colour(spin[7], 2);
-                cell[7] = edges[8].colour(parity[8], 1);
-                cell[8] = corners[4].colour(spin[4], 1);
+                switch(cell) {
+                    case 0: return corners[3].colour(spin[3], 1);
+                    case 1: return edges[0].colour(parity[0], 1);
+                    case 2: return corners[0].colour(spin[0], 2);
+                    case 3: return edges[7].colour(parity[7], 0);
+                    case 5: return edges[4].colour(parity[4], 0);
+                    case 6: return corners[7].colour(spin[7], 2);
+                    case 7: return edges[8].colour(parity[8], 1);
+                    case 8: return corners[4].colour(spin[4], 1);
+                    default: System.out.println(error);
+                }
                 break;
 
             case 2:
-                cell[0] = corners[0].colour(spin[0], 1);
-                cell[1] = edges[1].colour(parity[1], 1);
-                cell[2] = corners[1].colour(spin[1], 2);
-                cell[3] = edges[4].colour(parity[4], 1);
-                cell[5] = edges[5].colour(parity[5], 1);
-                cell[6] = corners[4].colour(spin[4], 2);
-                cell[7] = edges[9].colour(parity[9], 1);
-                cell[8] = corners[5].colour(spin[5], 1);
+                switch(cell) {
+                    case 0: return corners[0].colour(spin[0], 1);
+                    case 1: return edges[1].colour(parity[1], 1);
+                    case 2: return corners[1].colour(spin[1], 2);
+                    case 3: return edges[4].colour(parity[4], 1);
+                    case 5: return edges[5].colour(parity[5], 1);
+                    case 6: return corners[4].colour(spin[4], 2);
+                    case 7: return edges[9].colour(parity[9], 1);
+                    case 8: return corners[5].colour(spin[5], 1);
+                    default: System.out.println(error);
+                }
                 break;
 
             case 3:
-                cell[0] = corners[1].colour(spin[1], 1);
-                cell[1] = edges[2].colour(parity[2], 1);
-                cell[2] = corners[2].colour(spin[2], 2);
-                cell[3] = edges[5].colour(parity[5], 0);
-                cell[5] = edges[6].colour(parity[6], 0);
-                cell[6] = corners[5].colour(spin[5], 2);
-                cell[7] = edges[10].colour(parity[10], 1);
-                cell[8] = corners[6].colour(spin[6], 1);
+                switch(cell) {
+                    case 0: return corners[1].colour(spin[1], 1);
+                    case 1: return edges[2].colour(parity[2], 1);
+                    case 2: return corners[2].colour(spin[2], 2);
+                    case 3: return edges[5].colour(parity[5], 0);
+                    case 5: return edges[6].colour(parity[6], 0);
+                    case 6: return corners[5].colour(spin[5], 2);
+                    case 7: return edges[10].colour(parity[10], 1);
+                    case 8: return corners[6].colour(spin[6], 1);
+                    default: System.out.println(error);
+                }
                 break;
 
             case 4:
-                cell[0] = corners[2].colour(spin[2], 1);
-                cell[1] = edges[3].colour(parity[3], 1);
-                cell[2] = corners[3].colour(spin[3], 2);
-                cell[3] = edges[6].colour(parity[6], 1);
-                cell[5] = edges[7].colour(parity[7], 1);
-                cell[6] = corners[6].colour(spin[6], 2);
-                cell[7] = edges[11].colour(parity[11], 1);
-                cell[8] = corners[7].colour(spin[7], 1);
+                switch(cell) {
+                    case 0: return corners[2].colour(spin[2], 1);
+                    case 1: return edges[3].colour(parity[3], 1);
+                    case 2: return corners[3].colour(spin[3], 2);
+                    case 3: return edges[6].colour(parity[6], 1);
+                    case 5: return edges[7].colour(parity[7], 1);
+                    case 6: return corners[6].colour(spin[6], 2);
+                    case 7: return edges[11].colour(parity[11], 1);
+                    case 8: return corners[7].colour(spin[7], 1);
+                    default: System.out.println(error);
+                }
                 break;
 
             case 5:
-                cell[0] = corners[7].colour(spin[7], 0);
-                cell[1] = edges[8].colour(parity[8], 0);
-                cell[2] = corners[4].colour(spin[4], 0);
-                cell[3] = edges[11].colour(parity[11], 0);
-                cell[5] = edges[9].colour(parity[9], 0);
-                cell[6] = corners[6].colour(spin[6], 0);
-                cell[7] = edges[10].colour(parity[10], 0);
-                cell[8] = corners[5].colour(spin[5], 0);
+                switch(cell) {
+                    case 0: return corners[7].colour(spin[7], 0);
+                    case 1: return edges[8].colour(parity[8], 0);
+                    case 2: return corners[4].colour(spin[4], 0);
+                    case 3: return edges[11].colour(parity[11], 0);
+                    case 5: return edges[9].colour(parity[9], 0);
+                    case 6: return corners[6].colour(spin[6], 0);
+                    case 7: return edges[10].colour(parity[10], 0);
+                    case 8: return corners[5].colour(spin[5], 0);
+                    default: System.out.println(error);
+                }
                 break;
 
             default:
-                System.out.println("compileFace error.");
-                break;
+                System.out.println(error);
         }
-        return cell;
+        return "";
+    }
+
+    /**
+     * Compares the colours of two cells.
+     * @param face1
+     * @param cell1
+     * @param face2
+     * @param cell2
+     * @return true if same, false if different
+     */
+    public boolean compareCells(int face1, int cell1, int face2, int cell2) {
+        return compileCell(face1, cell1).equals(compileCell(face2, cell2));
+    }
+
+    /**
+     * Compares the colours of two cells on the same face.
+     * @param face
+     * @param cell1
+     * @param cell2
+     * @return true if same, false if different
+     */
+    public boolean compareCells(int face, int cell1, int cell2) {
+        return compareCells(face, cell1, face, cell2);
     }
 
     /**

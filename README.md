@@ -13,8 +13,11 @@ Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
 
 ### Methods
 
+* *boolean* `compareCells(int face, int cell1, int cell2)` compares the colours of two cells on the same face.
+* *boolean* `compareCells(int face1, int cell1, int face2, int cell2)` compares the colours of two cells.
+* *String* `compileCell(int face, int cell)` generates the colour of a cell.
 * *String*[][] `compileCube()` generates 6 arrays representing the colours of the cube.
-* *String*[] `compileFace()` generates an array of colours.
+* *String*[] `compileFace(int face)` generates an array of colours.
 * *int* `findCentre(String colour)` finds the face of a centre.
 * *int* `findCorner(Corner cubelet)` finds the position of a corner.
 * *int* `findCorner(Corner cubelet, int start, int stop)` fancy findCorner with search parameters.
