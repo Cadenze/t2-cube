@@ -3,6 +3,7 @@ public class Solve extends RubiksCube {
     private int htm;
     private int stm;
     private String movesFirst;
+    private String movesSecond;
 
     /**
      * Initializes a solved cube and then solves it. (No work done)
@@ -372,17 +373,29 @@ public class Solve extends RubiksCube {
         }
     }
 
+    /**
+     * Finishes the first layer.
+     */
     public void corners() {
-        corner0();
-        corner1();
-        corner2();
-        corner3();
+        cornerInsert(Corner.WHITE_BLUE_RED, 0);
+        updateFirst("y");
+        cornerInsert(Corner.WHITE_ORANGE_BLUE, 1);
+        updateFirst("y");
+        cornerInsert(Corner.WHITE_GREEN_ORANGE, 2);
+        updateFirst("y");
+        cornerInsert(Corner.WHITE_RED_GREEN, 3);
+        updateFirst("z2"); /* yellow on top, green in front */
     }
 
-    private void corner0() {
-        int position = findCorner(Corner.WHITE_BLUE_RED);
+    /**
+     * Inserts a corner into the first layer.
+     * @param cubelet Corner piece
+     * @param iteration Number of corners inserted before this
+     */
+    private void cornerInsert(Corner cubelet, int iteration) {
+        int position = findCorner(cubelet);
         int spin = getSpin(position);
-        String error = "corner 0 error.";
+        String error = "corner " + iteration + " error.";
         if(spin == 0) {
             switch(position) {
                 case 0:
@@ -412,9 +425,179 @@ public class Solve extends RubiksCube {
                     System.out.println(error);
             }
         } else if(spin == 1) {
-
+            switch(position) {
+                case 0:
+                    updateFirst("F D' F' R' D' R");
+                    break;
+                case 1:
+                    updateFirst("R D' R' D' R' D' R");
+                    break;
+                case 2:
+                    updateFirst("L' D2 L R' D' R");
+                    break;
+                case 3:
+                    updateFirst("L D' L' D R' D' R");
+                    break;
+                case 4:
+                    updateFirst("D' R' D R");
+                    break;
+                case 5:
+                    updateFirst("D2 R' D R");
+                    break;
+                case 6:
+                    updateFirst("R' D2 R");
+                    break;
+                case 7:
+                    updateFirst("R' D R");
+                    break;
+                default:
+                    System.out.println(error);
+            }
         } else {
+            switch(position) {
+                case 0:
+                    updateFirst("R' D R D' R' D R");
+                    break;
+                case 1:
+                    updateFirst("R D2 R2 D R");
+                    break;
+                case 2:
+                    updateFirst("L' D L R' D2 R");
+                    break;
+                case 3:
+                    updateFirst("L R' D L' R");
+                    break;
+                case 4:
+                    updateFirst("R' D' R");
+                    break;
+                case 5:
+                    updateFirst("D' R' D' R");
+                    break;
+                case 6:
+                    updateFirst("D2 R' D' R");
+                    break;
+                case 7:
+                    updateFirst("D R' D' R");
+                    break;
+                default:
+                    System.out.println(error);
+            }
+        }
+    }
 
+    /**
+     * Completes the second layer.
+     */
+    public void secondLayer() {
+        edgeInsert(Edge.ORANGE_GREEN, false);
+        updateSecond("y");
+        edgeInsert(Edge.ORANGE_BLUE, true);
+        updateSecond("y");
+        edgeInsert(Edge.RED_BLUE, false);
+        updateSecond("y");
+        edgeInsert(Edge.RED_GREEN, true); /* yellow on top, red in front */
+    }
+
+    /**
+     * Inserts an edge into the second layer.
+     * @param cubelet Edge piece
+     * @param natural Natural parity of face; true for red/orange, false for blue/green
+     */
+    private void edgeInsert(Edge cubelet, boolean natural) {
+        String error = "second layer error.";
+        int position = findEdge(cubelet);
+        if(getParity(position) == natural) {
+            switch(position) {
+                case 0:
+                    updateSecond("y U2 L' U L U F U' F' y'");
+                    break;
+                case 1:
+                    updateSecond("y U' L' U L U F U' F' y'");
+                    break;
+                case 2:
+                    updateSecond("y L' U L U F U' F' y'");
+                    break;
+                case 3:
+                    updateSecond("y U L' U L U F U' F' y'");
+                    break;
+                case 4:
+                    updateSecond("R U' R' U' F' U F U' R U' R' U' F' U F");
+                    break;
+                case 5:
+                    updateSecond("y R U' R' U' F' U F U L' U L U F U' F' y'");
+                    break;
+                case 6:
+                    updateSecond("y' L' U L U F U' F' y2 U' L' U L U F U' F' y'");
+                    break;
+                case 7:
+                    updateSecond("L' U L U F U' F' U' R U' R' U' F' U F");
+                    break;
+                default:
+                    System.out.println(error);
+            }
+        } else {
+            switch(position) {
+                case 0:
+                    updateSecond("U R U' R' U' F' U F");
+                    break;
+                case 1:
+                    updateSecond("U2 R U' R' U' F' U F");
+                    break;
+                case 2:
+                    updateSecond("U' R U' R' U' F' U F");
+                    break;
+                case 3:
+                    updateSecond("R U' R' U' F' U F");
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    updateSecond("y R U' R' U' F' U F y' R U' R' U' F' U F");
+                    break;
+                case 6:
+                    updateSecond("y' L' U L U F U' F' y U2 R U' R' U' F' U F");
+                    break;
+                case 7:
+                    updateSecond("L' U L U F U' F' y L' U L U F U' F' y'");
+                    break;
+                default:
+                    System.out.println(error);
+            }
+        }
+    }
+
+    /**
+     * Creates a yellow cross.
+     */
+    public void oll1() {
+        boolean[] parity = {getParity(0), getParity(1), getParity(2), getParity(3)};
+        if(parity[0]) {
+            if(parity[1]) { updateThird("U2 F U R U' R' F'"); }
+            else if(parity[2]) { updateThird("U F R U R' U' F'"); }
+            else { updateThird("U F U R U' R' F'"); }
+        } else if(parity[1]) {
+            if(parity[2]) { updateThird("U' F U R U' R' F'"); }
+            else { updateThird("F R U R' U' F'"); }
+        } else if(parity[3]) { updateThird("F U R U' R' F'"); }
+        else {
+            updateThird("F U R U' R' F U F R U R' U' F'");
+        }
+    }
+
+    public void oll2() {
+        int[] spin = new int[4];
+        int zeroes = 0;
+        for(int i = 0; i < 4; i++) {
+            spin[i] = getSpin(i);
+            if(spin[i] == 0) { zeroes++; }
+        }
+
+        if(zeroes == 0) {
+
+        } else if(zeroes == 1) {
+
+        } else if(zeroes == 2) {
+            
         }
     }
 
@@ -429,7 +612,7 @@ public class Solve extends RubiksCube {
     }
 
     /**
-     * Updates metrics, moves, and stores the moves for cross.
+     * Updates metrics, moves, and stores the moves for first layer.
      * @param moves Singmaster notation for multiple moves
      */
     private void updateFirst(String moves) {
@@ -439,6 +622,24 @@ public class Solve extends RubiksCube {
             movesFirst += " ";
         }
         movesFirst += moves;
+    }
+
+    /**
+     * Updates metrics, moves, and stores the moves for second layer.
+     * @param moves Singmaster notation for multiple moves
+     */
+    private void updateSecond(String moves) {
+        moves(moves);
+        updateMetrics(moves);
+        if(!movesSecond.equals("") && !movesSecond.endsWith(" ")) {
+            movesSecond += " ";
+        }
+        movesSecond += moves;
+    }
+
+    private void updateThird(String moves) {
+        moves(moves);
+        updateMetrics(moves);
     }
 
     /**
