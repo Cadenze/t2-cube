@@ -162,11 +162,6 @@ public class RubiksCube {
                 for(int i = 0; i < turn; i++) {
                     spinEdge(7, 6, 5, 4);
                     spinCentre(4, 3, 2, 1);
-
-                    editParity(7);
-                    editParity(6);
-                    editParity(5);
-                    editParity(4);
                 }
                 break;
 
@@ -215,11 +210,6 @@ public class RubiksCube {
                     spinCentre(4, 1, 2, 3);
                     spinCorner(4, 5, 6, 7);
                     spinEdge(8, 9, 10, 11);
-
-                    editParity(7);
-                    editParity(6);
-                    editParity(5);
-                    editParity(4);
                 }
                 break;
 

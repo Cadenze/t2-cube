@@ -6,7 +6,9 @@ public class Solve extends RubiksCube {
     private String movesSecond;
 
     public static void main(String[] args) {
-        Solve pog = new Solve("U2 B D L2 D' U F2 R2 L B' R D' R2 U' D2 L' R U R' U");
+        Solve pog = new Solve("U R B' L2 D B2 F2 R2 U2 R2 D' U' B' U' L' R U' R' D B2");
+        pog.solve();
+
         pog.printCube();
     }
 
@@ -26,7 +28,6 @@ public class Solve extends RubiksCube {
     public Solve(String instruction) {
         super(instruction);
         initializer();
-        solve();
     }
 
     /**
@@ -405,6 +406,7 @@ public class Solve extends RubiksCube {
     private void cornerInsert(Corner cubelet, int iteration) {
         int position = findCorner(cubelet);
         int spin = getSpin(position);
+        System.out.println(position + " " + spin);
         final String error = "corner " + iteration + " error.";
         if(spin == 0) {
             switch(position) {
@@ -426,7 +428,7 @@ public class Solve extends RubiksCube {
                     updateFirst("R D' R2 D R");
                     break;
                 case 6:
-                    updateFirst("B D2 B' R' D R");
+                    updateFirst("R' D' R D' R' D R");
                     break;
                 case 7:
                     updateFirst("F' D F D' R' D' R");
@@ -503,6 +505,7 @@ public class Solve extends RubiksCube {
         updateSecond("y");
         edgeInsert(Edge.ORANGE_BLUE, true);
         updateSecond("y");
+        /*
         edgeInsert(Edge.RED_BLUE, false);
         updateSecond("y");
         edgeInsert(Edge.RED_GREEN, true); /* yellow on top, red in front */
@@ -563,7 +566,7 @@ public class Solve extends RubiksCube {
                 case 4:
                     break;
                 case 5:
-                    updateSecond("y R U' R' U' F' U F U L' U L U F U' F' y'");
+                    updateSecond("y R U' R' U' F' U F y' R U' R' U' F' U F");
                     break;
                 case 6:
                     updateSecond("y' L' U L U F U' F' y U2 R U' R' U' F' U F");
