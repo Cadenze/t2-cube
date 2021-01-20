@@ -5,6 +5,11 @@ public class Solve extends RubiksCube {
     private String movesFirst;
     private String movesSecond;
 
+    public static void main(String[] args) {
+        Solve pog = new Solve("U2 B D L2 D' U F2 R2 L B' R D' R2 U' D2 L' R U R' U");
+        pog.printCube();
+    }
+
     /**
      * Initializes a solved cube and then solves it. (No work done)
      */
@@ -14,6 +19,7 @@ public class Solve extends RubiksCube {
         htm = 0;
         stm = 0;
         movesFirst = "";
+        movesSecond = "";
         solve();
     }
 
@@ -27,6 +33,7 @@ public class Solve extends RubiksCube {
         htm = 0;
         stm = 0;
         movesFirst = "";
+        movesSecond = "";
         solve();
     }
 
@@ -611,8 +618,95 @@ public class Solve extends RubiksCube {
         oll2();
     }
 
+    /**
+     * Permutates the corners of the last layer.
+     */
     public void pll1() {
-        while(
+        String alg = "R' F R' B2 R F' R' B2 R2";
+        int same = -1;
+        for(int i = 1; i < 5; i++) {
+            if(compareCells(i, 0, 2)) {
+                same = i - 1;
+                break;
+            }
+        }
+        switch(same) {
+            case 0:
+                if(compareCells(1, 0, 2)) {
+                    return;
+                } else {
+                    updateThird("U2 " + alg);
+                    break;
+                }
+            case 1:
+                updateThird("U' " + alg);
+                break;
+            case 2:
+                updateThird(alg);
+                break;
+            case 3:
+                updateThird("U " + alg);
+                break;
+            default:
+                updateThird(alg + " U " + alg);
+        }
+    }
+
+    /**
+     * Permutates the edges of the last layer.
+     */
+    public void pll2() {
+        int same = -1;
+        for(int i = 1; i < 5; i++) {
+            if(compareCells(i, 0, 1)) {
+                same = i - 1;
+                break;
+            }
+        }
+
+        switch(same) {
+            case 0:
+                updateThird("U2");
+                break;
+            case 1:
+                updateThird("U'");
+                break;
+            case 2:
+                break;
+            case 3:
+                updateThird("U");
+                break;
+            default:
+                if(compareCells(1, 1, 2, 0)) {
+                    updateThird("U M2 U' M2 U' M U2 M2 U2 M");
+                } else if(compareCells(1, 1, 3, 0)) {
+                    updateThird("M2 U M2 U2 M2 U M2");
+                } else {
+                    updateThird("M2 U' M2 U' M U2 M2 U2 M");
+                }
+                alignment();
+                return;
+        }
+
+        if(compareCells(1, 1, 2, 0)) {
+            updateThird("F2 U' L R' F2 L' R U' F2");
+        } else {
+            updateThird("F2 U L R' F2 L' R U F2");
+        }
+        alignment();
+    }
+
+    /**
+     * Aligns the top layer.
+     */
+    private void alignment() {
+        if(compareCells(1, 1, 2, 4)) {
+            updateThird("U'");
+        } else if(compareCells(1, 1, 3, 4)) {
+            updateThird("U2");
+        } else if(compareCells(1, 1, 4, 4)) {
+            updateThird("U");
+        }
     }
 
     /**
