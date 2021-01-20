@@ -37,23 +37,29 @@ Emulates a Rubik's Cube as 6 separate faces. Scramble optional.
 
 ## Solve.java
 
-Solves a Rubik's Cube with the Beginner's Layer-by-layer method.
+Solves a Rubik's Cube with the Beginner's Layer-by-layer (4LLL) method.
 
 ### Constructors
 
-* `Solve()` does nothing.
+* `Solve()` does effin' nothing.
 * `Solve(String instructions)` solves a cube, scrambled using instructions.
 
 ### Methods
 
+* *void* `solve()` solves a cube using the beginner's method, with 4-look last layer.
+    * *void* `cross()` creates a white cross.
+    * *void* `corners()` fills the first layer.
+    * *void* `secondLayer()` inserts the second layer.
+    * *void* `oll1()` creates a yellow cross.
+    * *void* `oll2()` orients the yellow face.
+    * *void* `pll1()` permutates the corners.
+    * *void* `pll2()` permutates the edges.
 * *int* `countHTM(String moves)` returns the half turn metric of the given moves.
 * *int* `countQTM(String moves)` returns the quarter turn metric of the given moves.
 * *int* `countSTM(String moves)` returns the slice turn metric of the given moves.
-* *void* `cross()` creates a white cross.
 * *int* `getHTM()` retrieves the current half turn metric.
 * *int* `getQTM()` retrieves the current quarter turn metric.
 * *int* `getSTM()` retrieves the current slice turn metric.
-* *void* `solve()` solves a cube using the beginner's method.
 * *void* `updateMetrics(String moves)` adds to the metrics given a set of moves.
 
 ## Cube.java (deprecated)
