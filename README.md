@@ -42,7 +42,8 @@ Solves a Rubik's Cube with the Beginner's Layer-by-layer (4LLL) method.
 ### Constructors
 
 * `Solve()` does effin' nothing.
-* `Solve(String instructions)` solves a cube, scrambled using instructions.
+* `Solve(String instructions)` scrambles and solves.
+* `Solve(String instructions, boolean solve)` to solve, or not to solve?
 
 ### Methods
 
@@ -54,6 +55,7 @@ Solves a Rubik's Cube with the Beginner's Layer-by-layer (4LLL) method.
     * *void* `oll2()` orients the yellow face.
     * *void* `pll1()` permutates the corners.
     * *void* `pll2()` permutates the edges.
+    * *void* `alignment()` rotates the top layer to complete the cube.
 * *int* `countHTM(String moves)` returns the half turn metric of the given moves.
 * *int* `countQTM(String moves)` returns the quarter turn metric of the given moves.
 * *int* `countSTM(String moves)` returns the slice turn metric of the given moves.

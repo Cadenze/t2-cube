@@ -5,22 +5,12 @@ public class Solve extends RubiksCube {
     private String movesFirst;
     private String movesSecond;
 
-    public static void main(String[] args) {
-        Solve pog = new Solve("U2 B D L2 D' U F2 R2 L B' R D' R2 U' D2 L' R U R' U");
-        pog.printCube();
-    }
-
     /**
-     * Initializes a solved cube and then solves it. (No work done)
+     * Initializes a solved cube. (No work done)
      */
     public Solve() {
         super();
-        qtm = 0;
-        htm = 0;
-        stm = 0;
-        movesFirst = "";
-        movesSecond = "";
-        solve();
+        initialize();
     }
 
     /**
@@ -28,13 +18,31 @@ public class Solve extends RubiksCube {
      * @param instruction The scramble instructions
      */
     public Solve(String instruction) {
+        this(instruction, true);
+    }
+
+    /**
+     * Initializes a cube, scrambles it, and then allows the user the option to solve it.
+     * @param instruction The scramble instructions
+     * @param solve true to solve; false to leave scrambled
+     */
+    public Solve(String instruction, boolean solve) {
         super(instruction);
+        initialize();
+        if(solve) {
+            solve();
+        }
+    }
+
+    /**
+     * Initializes metrics and move saves.
+     */
+    private void initialize() {
         qtm = 0;
         htm = 0;
         stm = 0;
         movesFirst = "";
         movesSecond = "";
-        solve();
     }
 
     /**
@@ -48,6 +56,7 @@ public class Solve extends RubiksCube {
         oll2();
         pll1();
         pll2();
+        alignment();
     }
 
     /**
@@ -366,13 +375,13 @@ public class Solve extends RubiksCube {
                     updateFirst("F L' F'");
                     break;
                 case(9):
-                    updateFirst("D' F L F'");
+                    updateFirst("D' F L' F'");
                     break;
                 case(10):
                     updateFirst("B' L B");
                     break;
                 case(11):
-                    updateFirst("D F L F'");
+                    updateFirst("D F L' F'");
                     break;
                 default:
                     System.out.println("green cross error.");
@@ -420,13 +429,13 @@ public class Solve extends RubiksCube {
                     updateFirst("R' D2 R D R' D' R");
                     break;
                 case 5:
-                    updateFirst("R D' R2 D R");
+                    updateFirst("D' R' D2 R D R' D' R");
                     break;
                 case 6:
-                    updateFirst("B D2 B' R' D R");
+                    updateFirst("D2 R' D2 R D R' D' R");
                     break;
                 case 7:
-                    updateFirst("F' D F D' R' D' R");
+                    updateFirst("D R' D2 R D R' D' R");
                     break;
                 default:
                     System.out.println(error);
@@ -528,16 +537,15 @@ public class Solve extends RubiksCube {
                     updateSecond("y U L' U L U F U' F' y'");
                     break;
                 case 4:
-                    updateSecond("R U' R' U' F' U F U' R U' R' U' F' U F");
                     break;
                 case 5:
-                    updateSecond("y R U' R' U' F' U F U L' U L U F U' F' y'");
+                    updateSecond("y R U' R' U' F' U F y' R U' R' U' F' U F");
                     break;
                 case 6:
-                    updateSecond("y' L' U L U F U' F' y2 U' L' U L U F U' F' y'");
+                    updateSecond("y' L' U L U F U' F' y U2 R U' R' U' F' U F");
                     break;
                 case 7:
-                    updateSecond("L' U L U F U' F' U' R U' R' U' F' U F");
+                    updateSecond("L' U L U F U' F' y L' U L U F U' F' y'");
                     break;
                 default:
                     System.out.println(error);
@@ -557,15 +565,16 @@ public class Solve extends RubiksCube {
                     updateSecond("R U' R' U' F' U F");
                     break;
                 case 4:
+                    updateSecond("R U' R' U' F' U F U' R U' R' U' F' U F");
                     break;
                 case 5:
-                    updateSecond("y R U' R' U' F' U F y' R U' R' U' F' U F");
+                    updateSecond("y R U' R' U' F' U F U L' U L U F U' F' y'");
                     break;
                 case 6:
-                    updateSecond("y' L' U L U F U' F' y U2 R U' R' U' F' U F");
+                    updateSecond("y' L' U L U F U' F' y2 U' L' U L U F U' F' y'");
                     break;
                 case 7:
-                    updateSecond("L' U L U F U' F' y L' U L U F U' F' y'");
+                    updateSecond("L' U L U F U' F' U' R U' R' U' F' U F");
                     break;
                 default:
                     System.out.println(error);
@@ -587,7 +596,7 @@ public class Solve extends RubiksCube {
             else { updateThird("F R U R' U' F'"); }
         } else if(parity[3]) { updateThird("F U R U' R' F'"); }
         else {
-            updateThird("F U R U' R' F U F R U R' U' F'");
+            updateThird("F U R U' R' F' U F R U R' U' F'");
         }
     }
 
@@ -632,7 +641,7 @@ public class Solve extends RubiksCube {
         }
         switch(same) {
             case 0:
-                if(compareCells(1, 0, 2)) {
+                if(compareCells(2, 0, 2)) {
                     return;
                 } else {
                     updateThird("U2 " + alg);
@@ -666,8 +675,12 @@ public class Solve extends RubiksCube {
 
         switch(same) {
             case 0:
-                updateThird("U2");
-                break;
+                if(compareCells(2, 0, 2)) {
+                    return;
+                } else {
+                    updateThird("U2");
+                    break;
+                }
             case 1:
                 updateThird("U'");
                 break;
@@ -693,13 +706,12 @@ public class Solve extends RubiksCube {
         } else {
             updateThird("F2 U L R' F2 L' R U F2");
         }
-        alignment();
     }
 
     /**
      * Aligns the top layer.
      */
-    private void alignment() {
+    public void alignment() {
         if(compareCells(1, 1, 2, 4)) {
             updateThird("U'");
         } else if(compareCells(1, 1, 3, 4)) {
