@@ -505,6 +505,7 @@ public class Solve extends RubiksCube {
         updateSecond("y");
         edgeInsert(Edge.ORANGE_BLUE, true);
         updateSecond("y");
+        /*
         edgeInsert(Edge.RED_BLUE, false);
         updateSecond("y");
         edgeInsert(Edge.RED_GREEN, true); /* yellow on top, red in front */

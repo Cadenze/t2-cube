@@ -10,10 +10,6 @@ public class RubiksCube {
     private boolean[] parity; /* true parity is for white/yellow/(red) facing white/yellow/(red) */
     private String[] centres;
 
-    public static void main(String[] args) {
-        RubiksCube pog = new RubiksCube("z");
-        pog.printCube();
-    }
     /**
      * Initializes a solved cube.
      */
@@ -154,6 +150,11 @@ public class RubiksCube {
                 for(int i = 0; i < turn; i++) {
                     spinEdge(0, 2, 10, 8);
                     spinCentre(0, 3, 5, 1);
+                    
+                    editParity(0);
+                    editParity(2);
+                    editParity(10);
+                    editParity(8);
                 }
                 break;
             
@@ -169,10 +170,10 @@ public class RubiksCube {
                     spinEdge(1, 3, 11, 9);
                     spinCentre(0, 4, 5, 2);
 
-                    editParity(4);
-                    editParity(5);
-                    editParity(6);
-                    editParity(7);
+                    editParity(1);
+                    editParity(3);
+                    editParity(11);
+                    editParity(9);
                 }
                 break;
 
@@ -193,6 +194,11 @@ public class RubiksCube {
                     editSpin(7, -1);
                     editSpin(6, +1);
                     editSpin(2, -1);
+
+                    editParity(0);
+                    editParity(2);
+                    editParity(10);
+                    editParity(8);
                 }
                 break;
 
@@ -224,6 +230,19 @@ public class RubiksCube {
                     editSpin(3, -1);
                     editSpin(7, +1);
                     editSpin(4, -1);
+
+                    editParity(0);
+                    editParity(7);
+                    editParity(8);
+                    editParity(4);
+                    editParity(1);
+                    editParity(3);
+                    editParity(11);
+                    editParity(9);
+                    editParity(2);
+                    editParity(5);
+                    editParity(10);
+                    editParity(6);
                 }
                 break;
 
@@ -481,25 +500,16 @@ public class RubiksCube {
             return centres[face];
         }
 
-        int parityVertical = 0;
-        int parityHorizontal = 0;
-        if(centres[face].equals("r") || centres[face].equals("o")) {
-            parityVertical++;
-        } else if(centres[face].equals("b") || centres[face].equals("g")) {
-            parityVertical++;
-            parityHorizontal++;
-        }
-
         switch(face) {
             case 0:
                 switch(cell) {
                     case 0: return corners[2].colour(spin[2], 0);
-                    case 1: return edges[2].colour(parity[2], parityVertical);
+                    case 1: return edges[2].colour(parity[2], 0);
                     case 2: return corners[1].colour(spin[1], 0);
-                    case 3: return edges[3].colour(parity[3], parityHorizontal);
-                    case 5: return edges[1].colour(parity[1], parityHorizontal);
+                    case 3: return edges[3].colour(parity[3], 0);
+                    case 5: return edges[1].colour(parity[1], 0);
                     case 6: return corners[3].colour(spin[3], 0);
-                    case 7: return edges[0].colour(parity[0], parityVertical);
+                    case 7: return edges[0].colour(parity[0], 0);
                     case 8: return corners[0].colour(spin[0], 0);
                     default: System.out.println(error);
                 }
@@ -508,12 +518,12 @@ public class RubiksCube {
             case 1:
                 switch(cell) {
                     case 0: return corners[3].colour(spin[3], 1);
-                    case 1: return edges[0].colour(parity[0], parityVertical);
+                    case 1: return edges[0].colour(parity[0], 1);
                     case 2: return corners[0].colour(spin[0], 2);
-                    case 3: return edges[7].colour(parity[7], parityHorizontal);
-                    case 5: return edges[4].colour(parity[4], parityHorizontal);
+                    case 3: return edges[7].colour(parity[7], 0);
+                    case 5: return edges[4].colour(parity[4], 0);
                     case 6: return corners[7].colour(spin[7], 2);
-                    case 7: return edges[8].colour(parity[8], parityVertical);
+                    case 7: return edges[8].colour(parity[8], 1);
                     case 8: return corners[4].colour(spin[4], 1);
                     default: System.out.println(error);
                 }
@@ -522,12 +532,12 @@ public class RubiksCube {
             case 2:
                 switch(cell) {
                     case 0: return corners[0].colour(spin[0], 1);
-                    case 1: return edges[1].colour(parity[1], parityVertical);
+                    case 1: return edges[1].colour(parity[1], 1);
                     case 2: return corners[1].colour(spin[1], 2);
-                    case 3: return edges[4].colour(parity[4], parityHorizontal);
-                    case 5: return edges[5].colour(parity[5], parityHorizontal);
+                    case 3: return edges[4].colour(parity[4], 1);
+                    case 5: return edges[5].colour(parity[5], 1);
                     case 6: return corners[4].colour(spin[4], 2);
-                    case 7: return edges[9].colour(parity[9], parityVertical);
+                    case 7: return edges[9].colour(parity[9], 1);
                     case 8: return corners[5].colour(spin[5], 1);
                     default: System.out.println(error);
                 }
@@ -536,12 +546,12 @@ public class RubiksCube {
             case 3:
                 switch(cell) {
                     case 0: return corners[1].colour(spin[1], 1);
-                    case 1: return edges[2].colour(parity[2], parityVertical);
+                    case 1: return edges[2].colour(parity[2], 1);
                     case 2: return corners[2].colour(spin[2], 2);
-                    case 3: return edges[5].colour(parity[5], parityHorizontal);
-                    case 5: return edges[6].colour(parity[6], parityHorizontal);
+                    case 3: return edges[5].colour(parity[5], 0);
+                    case 5: return edges[6].colour(parity[6], 0);
                     case 6: return corners[5].colour(spin[5], 2);
-                    case 7: return edges[10].colour(parity[10], parityVertical);
+                    case 7: return edges[10].colour(parity[10], 1);
                     case 8: return corners[6].colour(spin[6], 1);
                     default: System.out.println(error);
                 }
@@ -550,12 +560,12 @@ public class RubiksCube {
             case 4:
                 switch(cell) {
                     case 0: return corners[2].colour(spin[2], 1);
-                    case 1: return edges[3].colour(parity[3], parityVertical);
+                    case 1: return edges[3].colour(parity[3], 1);
                     case 2: return corners[3].colour(spin[3], 2);
-                    case 3: return edges[6].colour(parity[6], parityHorizontal);
-                    case 5: return edges[7].colour(parity[7], parityHorizontal);
+                    case 3: return edges[6].colour(parity[6], 1);
+                    case 5: return edges[7].colour(parity[7], 1);
                     case 6: return corners[6].colour(spin[6], 2);
-                    case 7: return edges[11].colour(parity[11], parityVertical);
+                    case 7: return edges[11].colour(parity[11], 1);
                     case 8: return corners[7].colour(spin[7], 1);
                     default: System.out.println(error);
                 }
@@ -564,12 +574,12 @@ public class RubiksCube {
             case 5:
                 switch(cell) {
                     case 0: return corners[7].colour(spin[7], 0);
-                    case 1: return edges[8].colour(parity[8], parityVertical);
+                    case 1: return edges[8].colour(parity[8], 0);
                     case 2: return corners[4].colour(spin[4], 0);
-                    case 3: return edges[11].colour(parity[11], parityHorizontal);
-                    case 5: return edges[9].colour(parity[9], parityHorizontal);
+                    case 3: return edges[11].colour(parity[11], 0);
+                    case 5: return edges[9].colour(parity[9], 0);
                     case 6: return corners[6].colour(spin[6], 0);
-                    case 7: return edges[10].colour(parity[10], parityVertical);
+                    case 7: return edges[10].colour(parity[10], 0);
                     case 8: return corners[5].colour(spin[5], 0);
                     default: System.out.println(error);
                 }
