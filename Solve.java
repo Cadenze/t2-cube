@@ -15,7 +15,11 @@ public class Solve extends RubiksCube {
      */
     public Solve() {
         super();
-        initializer();
+        qtm = 0;
+        htm = 0;
+        stm = 0;
+        movesFirst = "";
+        movesSecond = "";
         solve();
     }
 
@@ -25,19 +29,12 @@ public class Solve extends RubiksCube {
      */
     public Solve(String instruction) {
         super(instruction);
-        initializer();
-        solve();
-    }
-
-    /**
-     * Initializes the metric values to zero, and clears the storage for first and second layer moves.
-     */
-    private void initializer() {
         qtm = 0;
         htm = 0;
         stm = 0;
         movesFirst = "";
         movesSecond = "";
+        solve();
     }
 
     /**
@@ -516,7 +513,6 @@ public class Solve extends RubiksCube {
     private void edgeInsert(Edge cubelet, boolean natural) {
         final String error = "second layer error.";
         int position = findEdge(cubelet);
-        System.out.println(position + " " + getParity(position));
         if(getParity(position) == natural) {
             switch(position) {
                 case 0:
@@ -563,7 +559,7 @@ public class Solve extends RubiksCube {
                 case 4:
                     break;
                 case 5:
-                    updateSecond("y R U' R' U' F' U F U L' U L U F U' F' y'");
+                    updateSecond("y R U' R' U' F' U F y' R U' R' U' F' U F");
                     break;
                 case 6:
                     updateSecond("y' L' U L U F U' F' y U2 R U' R' U' F' U F");
