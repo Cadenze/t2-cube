@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Statistics {
+public class MultipleSolves {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner kb = new Scanner(System.in);
         System.out.print("Input scramble or text file: ");
@@ -19,6 +19,10 @@ public class Statistics {
         }
     }
 
+    /**
+     * Retrieves the statistics on a single scramble.
+     * @param sequence Singmaster notation for multiple moves
+     */
     public static void scramble(String sequence) {
         Solve cube = new Solve(sequence);
         System.out.println("Solved: " + cube.checkSolved());
@@ -27,6 +31,10 @@ public class Statistics {
         System.out.println("STM: " + cube.getSTM());
     }
 
+    /**
+     * Retrieves the statistics on multiple scrambles.
+     * @param file .txt files containing a scramble per line
+     */
     public static void stats(String file) throws FileNotFoundException {
         try {
             File csv = new File("statistics.csv");
