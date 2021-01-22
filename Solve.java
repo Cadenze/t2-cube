@@ -757,9 +757,28 @@ public class Solve extends RubiksCube {
         movesSecond += moves;
     }
 
+    /**
+     * Updates metrics and moves for third layer.
+     * @param moves Singmaster notation for multiple moves
+     */
     private void updateThird(String moves) {
         moves(moves);
         updateMetrics(moves);
+    }
+
+    /**
+     * Checks whether the cube is in solved state
+     * @return true if solved
+     */
+    public boolean checkSolved() {
+        for(int i = 0; i < 6; i++) {
+            for(int j = 1; j < 9; j++) {
+                if(!compareCells(i, 0, j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
