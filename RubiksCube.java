@@ -10,11 +10,6 @@ public class RubiksCube {
     private boolean[] parity; /* true parity is for white/yellow/(red) facing not left/right */
     private String[] centres;
 
-    public static void main(String[] args) {
-        RubiksCube gan = new RubiksCube("U' D2 R2 F' D L R2");
-        gan.printCube();
-    }
-
     /**
      * Initializes a solved cube.
      */
