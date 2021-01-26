@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class CFOP extends Solve {
     
     /**
@@ -31,7 +33,8 @@ public class CFOP extends Solve {
     public void solve() {
         cross();
         f2l();
-        oll();
+        OLL state = new OLL();
+        oll(state);
         pll();
     }
 
@@ -50,18 +53,21 @@ public class CFOP extends Solve {
         private final int[] spin = {getSpin(0), getSpin(1), getSpin(2), getSpin(3)};
         private int trues;
         private int zeroes;
+        private int[] pos0;
+        private int[] posT;
 
         /**
          * Stores the variables for identifying the OLL case.
          */
         OLL() {
-            
             trues = 0;
             zeroes = 0;
             for(int i = 0; i < 4; i++) {
                 if(parity[i]) { trues++; }
                 if(spin[i] == 0) { zeroes++; }
             }
+            pos0 = findZero();
+            posT = findTrue();
         }
 
         /**
@@ -79,10 +85,9 @@ public class CFOP extends Solve {
          * @return Code for 3 spins
          */
         int consecutiveSpins() {
-            int[] positions = findTrue();
             int position = 3;
-            if(positions[1] - positions[0] != 3) {
-                position = positions[0];
+            if(posT[1] - posT[0] != 3) {
+                position = posT[0];
             }
             return spin[position] * 100 + spin[(position + 1) % 4] * 10 + spin[(position + 2) % 4];
         }
@@ -94,12 +99,12 @@ public class CFOP extends Solve {
          */
         int nextSpin() {
             if(zeroes == 1) {
-                int position = (findZero()[0] + 1) % 4;
+                int position = (pos0[0] + 1) % 4;
                 return spin[position];
             } else if(deltaZero() == 3) {
                 return spin[1];
             } else {
-                int position = (findZero()[1] + 1) % 4;
+                int position = (pos0[1] + 1) % 4;
                 return spin[position];
             }
         }
@@ -110,8 +115,7 @@ public class CFOP extends Solve {
          * @return true if consecutive; false if not
          */
         boolean consecutiveZeroes() {
-            int[] positions = findZero();
-            return positions[1] - positions[0] != 2;
+            return pos0[1] - pos0[0] != 2;
         }
 
         /**
@@ -120,8 +124,7 @@ public class CFOP extends Solve {
          * @return Delta
          */
         int deltaZero() {
-            int[] positions = findZero();
-            return positions[1] - positions[0];
+            return pos0[1] - pos0[0];
         }
 
         /**
@@ -130,8 +133,7 @@ public class CFOP extends Solve {
          * @return true if L; false if line
          */
         boolean consecutiveTrues() {
-            int[] positions = findTrue();
-            return positions[1] - positions[0] != 2;
+            return posT[1] - posT[0] != 2;
         }
 
         /**
@@ -140,8 +142,6 @@ public class CFOP extends Solve {
          * @return Corners ahead of edges by
          */
         int relativePosition() {
-            int[] pos0 = findZero();
-            int[] posT = findTrue();
             int relpos0 = 0;
             int relposT = 0;
 
@@ -165,9 +165,6 @@ public class CFOP extends Solve {
          * @return Spin of corner
          */
         int unaccompaniedSpin() {
-            int[] pos0 = findZero();
-            int[] posT = findTrue();
-
             if(pos0[0] == posT[0] || pos0[1] == posT[0]) {
                 return spin[posT[1]];
             } else {
@@ -181,10 +178,7 @@ public class CFOP extends Solve {
          * @return Spins of corners
          */
         int spinsAfterDouble() {
-            int[] pos0 = findZero();
-            int[] posT = findTrue();
             int position;
-
             if(pos0[0] == posT[0] || pos0[1] == posT[0]) {
                 position = posT[0];
             } else {
@@ -208,7 +202,6 @@ public class CFOP extends Solve {
          * @return Spin of Corner
          */
         int spinAfter1() {
-            int[] posT = findTrue();
             if(posT[0] == 1) {
                 return spin[(posT[0] + 1) % 4];
             } else {
@@ -222,8 +215,6 @@ public class CFOP extends Solve {
          * @return true if double; false if not
          */
         boolean doubleExistence() {
-            int[] pos0 = findZero();
-            int[] posT = findTrue();
             return pos0[0] == posT[0] || pos0[1] == posT[0] || pos0[0] == posT[1] || pos0[1] == posT[1];
         }
 
@@ -260,6 +251,83 @@ public class CFOP extends Solve {
         }
 
         /**
+         * Finds the only position with given spin.
+         * @param spin Spin of corner
+         * @return Position of corner
+         */
+        int findOnlySpin(int spin) {
+            for(int i = 0; i < 4; i++) {
+                if(this.spin[i] == spin) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Translates number of moves into actual moves
+         * @param moves Number of U turns
+         * @return Moves
+         */
+        String alignMoves(int moves) {
+            switch(moves) {
+                case 0: return "";
+                case 1: return "U";
+                case 2: return "U2";
+                case 3: return "U'";
+                default: return "alignment error";
+            }
+        }
+
+        /**
+         * Returns the moves needed to align for OLL procedure.
+         * @param spin Spin of corner
+         * @param position Final position of corner
+         * @return Moves needed to get to final position
+         */
+        String alignment(int spin, int position) {
+            int from = findOnlySpin(spin);
+            int moves = (from + 4 - position) % 4;
+            return alignMoves(moves);
+        }
+
+        /**
+         * Returns the moves needed to align for OLL procedure
+         * @param spin0 Spin of corner 0
+         * @param spin1 Spin of corner 1
+         * @param spin2 Spin of corner 2
+         * @return Moves
+         */
+        String alignment(int spin0, int spin1, int spin2) {
+            int[] current = Arrays.copyOf(spin, 4);
+            int counter = 0;
+            while(current[0] != spin0 || current[1] != spin1 || current[2] != spin2) {
+                int temp = current[0];
+                for(int i = 0; i < 3; i++) {
+                    current[i] = current[i+1];
+                }
+                current[3] = temp;
+                counter++;
+            }
+            return alignMoves(counter);
+        }
+
+        /**
+         * Returns the moves needed to align for OLL procedure.
+         * @param parity Parity of edges to search
+         * @param secondPos Final position of the latter corner.
+         * @return Moves
+         */
+        String alignment(boolean parity, int secondPos) {
+            int from = 0;
+            if(posT[1] - posT[0] != 3) {
+                from = posT[1];
+            }
+            int moves = (from + 4 - secondPos) % 4;
+            return alignMoves(moves);
+        }
+
+        /**
          * Returns the number of correctly oriented edges.
          * @return Number of true parities
          */
@@ -276,8 +344,7 @@ public class CFOP extends Solve {
         }
     }
 
-    public void oll() {
-        OLL state = new OLL();
+    public void oll(OLL state) {
         final String ERROR = "oll error.";
         int t0code = 0;
 
@@ -291,42 +358,42 @@ public class CFOP extends Solve {
 
         switch(t0code) {
             case 0:
-                if(state.consecutiveDuplicates()) { ollCase(2); }
-                else { ollCase(1); }
+                if(state.consecutiveDuplicates()) { ollCase(2, state); }
+                else { ollCase(1, state); }
                 break;
             case 1:
-                if(state.nextSpin() == 1) { ollCase(4); }
-                else { ollCase(3); }
+                if(state.nextSpin() == 1) { ollCase(4, state); }
+                else { ollCase(3, state); }
                 break;
             case 2:
-                if(!state.consecutiveZeroes()) { ollCase(17); }
-                else if(state.nextSpin() == 1) { ollCase(18); }
-                else { ollCase(19); }
+                if(!state.consecutiveZeroes()) { ollCase(17, state); }
+                else if(state.nextSpin() == 1) { ollCase(18, state); }
+                else { ollCase(19, state); }
                 break;
-            case 4: ollCase(20); break;
+            case 4: ollCase(20, state); break;
 
             case 20:
                 switch(state.consecutiveSpins()) {
-                    case 112: ollCase(49); break;
-                    case 121: ollCase(53); break;
-                    case 122: ollCase(48); break;
-                    case 211: ollCase(50); break;
-                    case 212: ollCase(54); break;
-                    case 221: ollCase(47); break;
+                    case 112: ollCase(49, state); break;
+                    case 121: ollCase(53, state); break;
+                    case 122: ollCase(48, state); break;
+                    case 211: ollCase(50, state); break;
+                    case 212: ollCase(54, state); break;
+                    case 221: ollCase(47, state); break;
                     default: System.out.println(ERROR);
                 }
                 break;
             case 21:
                 int code21 = state.relativePosition() * 10 + state.nextSpin();
                 switch(code21) {
-                    case 1: ollCase(6); break;
-                    case 2: ollCase(5); break;
-                    case 11: ollCase(12); break;
-                    case 12: ollCase(7); break;
-                    case 21: ollCase(9); break;
-                    case 22: ollCase(10); break;
-                    case 31: ollCase(8); break;
-                    case 32: ollCase(11); break;
+                    case 1: ollCase(6, state); break;
+                    case 2: ollCase(5, state); break;
+                    case 11: ollCase(12, state); break;
+                    case 12: ollCase(7, state); break;
+                    case 21: ollCase(9, state); break;
+                    case 22: ollCase(10, state); break;
+                    case 31: ollCase(8, state); break;
+                    case 32: ollCase(11, state); break;
                     default: System.out.println(ERROR);
                 }
                 break;
@@ -338,32 +405,32 @@ public class CFOP extends Solve {
                     code22 = 200 + state.relativePosition() * 10 + state.nextSpin();
                 }
                 switch(code22) {
-                    case 101: ollCase(44); break;
-                    case 102: ollCase(32); break;
-                    case 111: ollCase(41); break;
-                    case 112: ollCase(30); break;
-                    case 121: ollCase(42); break;
-                    case 122: ollCase(29); break;
-                    case 131: ollCase(43); break;
-                    case 132: ollCase(31); break;
-                    case 201: ollCase(36); break;
-                    case 202: ollCase(38); break;
-                    case 211: ollCase(37); break;
-                    case 212: ollCase(35); break;
+                    case 101: ollCase(44, state); break;
+                    case 102: ollCase(32, state); break;
+                    case 111: ollCase(41, state); break;
+                    case 112: ollCase(30, state); break;
+                    case 121: ollCase(42, state); break;
+                    case 122: ollCase(29, state); break;
+                    case 131: ollCase(43, state); break;
+                    case 132: ollCase(31, state); break;
+                    case 201: ollCase(36, state); break;
+                    case 202: ollCase(38, state); break;
+                    case 211: ollCase(37, state); break;
+                    case 212: ollCase(35, state); break;
                     default: System.out.println(ERROR);
                 }
                 break;
-            case 24: ollCase(28); break;
+            case 24: ollCase(28, state); break;
 
             case 30:
                 switch(state.edgeSpin()) {
-                    case 11: ollCase(55); break;
-                    case 22: ollCase(56); break;
+                    case 11: ollCase(55, state); break;
+                    case 22: ollCase(56, state); break;
                     case 12: case 21:
                         if(state.spinAfter1() == 1) {
-                            ollCase(51);
+                            ollCase(51, state);
                         } else {
-                            ollCase(52);
+                            ollCase(52, state);
                         }
                         break;
                     default: System.out.println(ERROR);
@@ -376,10 +443,10 @@ public class CFOP extends Solve {
                 }
                 code31 += state.nextSpin();
                 switch(code31) {
-                    case 1: ollCase(14); break;
-                    case 2: ollCase(15); break;
-                    case 11: ollCase(16); break;
-                    case 12: ollCase(13); break;
+                    case 1: ollCase(14, state); break;
+                    case 2: ollCase(15, state); break;
+                    case 11: ollCase(16, state); break;
+                    case 12: ollCase(13, state); break;
                     default: System.out.println(ERROR);
                 }
                 break;
@@ -391,37 +458,133 @@ public class CFOP extends Solve {
                     code32 = 200 + state.edgeSpin();
                 }
                 switch(code32) {
-                    case 101: ollCase(46); break;
-                    case 102: ollCase(34); break;
-                    case 110: case 111: case 112: ollCase(45); break;
-                    case 120: case 121: case 122: ollCase(33); break;
-                    case 200: case 201: case 202: ollCase(39); break;
+                    case 101: ollCase(46, state); break;
+                    case 102: ollCase(34, state); break;
+                    case 110: case 111: case 112: ollCase(45, state); break;
+                    case 120: case 121: case 122: ollCase(33, state); break;
+                    case 200: case 201: case 202: ollCase(39, state); break;
                     case 210: case 211: case 212: 
-                    case 220: case 221: case 222: ollCase(40); break;
+                    case 220: case 221: case 222: ollCase(40, state); break;
                     default: System.out.println(ERROR);
                 }
                 break;
-            case 34: ollCase(57); break;
+            case 34: ollCase(57, state); break;
 
             case 40:
-                if(state.consecutiveDuplicates()) { ollCase(22); }
-                else { ollCase(21); }
+                if(state.consecutiveDuplicates()) { ollCase(22, state); }
+                else { ollCase(21, state); }
                 break;
             case 41:
-                if(state.nextSpin() == 1) { ollCase(26); }
-                else { ollCase(27); }
+                if(state.nextSpin() == 1) { ollCase(26, state); }
+                else { ollCase(27, state); }
                 break;
             case 42:
-                if(!state.consecutiveZeroes()) { ollCase(25); }
-                else if(state.nextSpin() == 1) { ollCase(23); }
-                else { ollCase(24); }
+                if(!state.consecutiveZeroes()) { ollCase(25, state); }
+                else if(state.nextSpin() == 1) { ollCase(23, state); }
+                else { ollCase(24, state); }
                 break;
             case 44: break;
             default: System.out.println(ERROR);
         }
     }
 
-    private void ollCase(int number) {
+    private void ollCase(int number, OLL state) {
+        switch(number) {
+            case 1: ollExecute(1, 2, 1, "R U2 R2 F R F' U2 R' F R F'", state); break;
+            case 2: ollExecute(1, 1, 2, "r U r' U2 r U2 R' U2 R U' r'", state); break;
+            case 3: ollExecute(0, 3, "r' R2 U R' U r U2 r' U M'", state); break;
+            case 4: ollExecute(0, 0, "M U' r U2 r' U' R U' R' M'", state); break;
+            case 5: ollExecute(0, 2, "l' U2 L U L' U l", state); break;
+            case 6: ollExecute(0, 1, "r U2 R' U' R U' r'", state); break;
+            case 7: ollExecute(0, 3, "r U R' U R U2 r'", state); break;
+            case 8: ollExecute(0, 0, "l' U' L U' L' U2 l", state); break;
+            case 9: ollExecute(0, 0, "R U R' U' R' F R2 U R' U' F'", state); break;
+            case 10: ollExecute(0, 1, "R U R' U R' F R F' R U2 R'", state); break;
+            case 11: ollExecute(0, 1, "r U R' U R' F R F' R U2 r'", state); break;
+            case 12: ollExecute(0, 2, "M' R' U' R U' R' U2 R U' R r'", state); break;
+            case 13: ollExecute(0, 3, "F U R U' R2 F' R U R U' R'", state); break;
+            case 14: ollExecute(0, 0, "R' F R U R' F' R F U' F'", state); break;
+            case 15: ollExecute(0, 2, "l' U' l L' U' L U l' U l", state); break;
+            case 16: ollExecute(0, 1, "r U r' R U R' U' r U' r'", state); break;
+            case 17: ollExecute(1, 3, "F R' F' R2 r' U R U' R' U' M'", state); break;
+            case 18: ollExecute(2, 0, "r U R' U R U2 r2 U' R U' R' U2 r", state); break;
+            case 19: ollExecute(1, 0, "r' R U R U R' U' M' R' F R F'", state); break;
+            case 20: updateThird("r U R' U' M2 U R U' R' U' M'"); break;
+            case 21: ollExecute(2, 1, 2, "R U2 R' U' R U R' U' R U' R'", state); break;
+            case 22: ollExecute(2, 1, 1, "R U2 R2 U' R2 U' R2 U2 R", state); break;
+            case 23: ollExecute(1, 1, "R2 D' R U2 R' D R U2 R", state); break;
+            case 24: ollExecute(2, 2, "r U R' U' r' F R F'", state); break;
+            case 25: ollExecute(2, 0, "F' r U R' U' r' F R", state); break;
+            case 26: ollExecute(0, 1, "R U2 R' U' R U' R'", state); break;
+            case 27: ollExecute(0, 3, "R U R' U R U2 R'", state); break;
+            case 28: ollExecute(true, 3, "r U R' U' r' R U R U' R'", state); break;
+            case 29: ollExecute(2, 2, "R U R' U' R U' R' F' U' F R U R'", state); break;
+            case 30: ollExecute(1, 2, "F R' F R2 U' R' U' R U R' F2", state); break;
+            case 31: ollExecute(2, 2, "R' U' F U R U' R' F' R", state); break;
+            case 32: ollExecute(2, 0, "L U F' U' L' U L F L'", state); break;
+            case 33: ollExecute(1, 3, "R U R' U' R' F R F'", state); break;
+            case 34: ollExecute(2, 1, "R U R2 U' R' F R U R U' F'", state); break;
+            case 35: ollExecute(1, 3, "R U2 R2 F R F' R U2 R'", state); break;
+            case 36: ollExecute(1, 1, "L' U' L U' L' U L U L F' L' F", state); break;
+            case 37: ollExecute(1, 3, "F R' F' R U R U' R'", state); break;
+            case 38: ollExecute(1, 0, "R U R' U R U' R' U' R' F R F'", state); break;
+            case 39: ollExecute(1, 0, "L F' L' U' L U F U' L'", state); break;
+            case 40: ollExecute(1, 1, "R' F R U R' U' F' U R", state); break;
+            case 41: ollExecute(1, 1, "R U R' U R U2 R' F R U R' U' F'", state); break;
+            case 42: ollExecute(2, 0, "R' U' R U' R' U2 R F R U R' U' F'", state); break;
+            case 43: ollExecute(1, 2, "F' U' L' U L F", state); break;
+            case 44: ollExecute(1, 0, "F U R U' R' F'", state); break;
+            case 45: ollExecute(1, 2, "F R U R' U' F'", state); break;
+            case 46: ollExecute(1, 0, "R' U' R' F R F' U R", state); break;
+            case 47: ollExecute(1, 2, 1, "R' U' R' F R F' R' F R F' U R", state); break;
+            case 48: ollExecute(2, 1, 1, "F R U R' U' R U R' U' F'", state); break;
+            case 49: ollExecute(2, 1, 1, "r U' r2 U r2 U r2 U' r", state); break;
+            case 50: ollExecute(2, 1, 1, "r' U r2 U' r2 U' r2 U r'", state); break;
+            case 51: ollExecute(1, 2, 1, "F U R U' R' U R U' R' F'", state); break;
+            case 52: ollExecute(1, 2, 1, "R U R' U R U' B U' B' R'", state); break;
+            case 53: ollExecute(2, 1, 2, "l' U2 L U L' U' L U L' U l", state); break;
+            case 54: ollExecute(2, 1, 2, "r U2 R' U' R U R' U' R U' r'", state); break;
+            case 55: ollExecute(2, 1, 2, "R' F R U R U' R2 F' R2 U' R' U R U R'", state); break;
+            case 56: ollExecute(1, 2, 1, "r' U' r U' R' U R U' R' U R r' U r", state); break;
+            case 57: ollExecute(true, 3, "R U R' U' M' U R U' r'", state); break; /* cursed pls fix */
+            default: System.out.println("oll error.");
+        }
+    }
 
+    /**
+     * Anchors and performs the OLL algorithm based on a single spin position.
+     * @param spin Spin of corner
+     * @param position Destined position of corner
+     * @param alg Algorithm to perform
+     * @param state The OLL state
+     */
+    private void ollExecute(int spin, int position, String alg, OLL state) {
+        updateThird(state.alignment(spin, position));
+        updateThird(alg);
+    }
+
+    /**
+     * Anchors and performs the OLL algorithm based on 3 spins.
+     * @param spin0 Spin at position 0
+     * @param spin1 Spin at position 1
+     * @param spin2 Spin at position 2
+     * @param alg Algorithm to perform
+     * @param state The OLL state
+     */
+    private void ollExecute(int spin0, int spin1, int spin2, String alg, OLL state) {
+        updateThird(state.alignment(spin0, spin1, spin2));
+        updateThird(alg);
+    }
+
+    /**
+     * Anchors and performs the OLL algorithm based on 2 true parity consecutive.
+     * @param parity Parity of edges (default true)
+     * @param secondPos Destined position of latter corner
+     * @param alg Algorithm to perform
+     * @param state The OLL state
+     */
+    private void ollExecute(boolean parity, int secondPos, String alg, OLL state) {
+        updateThird(state.alignment(parity, secondPos));
+        updateThird(alg);
     }
 }
