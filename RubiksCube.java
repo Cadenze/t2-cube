@@ -80,12 +80,22 @@ public class RubiksCube {
                     spinEdge(0, 1, 2, 3);
                 }
                 break;
+            
+            case "u":
+                turnFace("U", turn);
+                turnFace("E", 4 - turn);
+                break;
 
             case "D":
                 for(int i = 0; i < turn; i++) {
                     spinCorner(4, 7, 6, 5);
                     spinEdge(8, 11, 10, 9);
                 }
+                break;
+            
+            case "d":
+                turnFace("D", turn);
+                turnFace("E", turn);
                 break;
 
             case "F":
@@ -105,6 +115,11 @@ public class RubiksCube {
                 }
                 break;
 
+            case "f":
+                turnFace("F", turn);
+                turnFace("S", turn);
+                break;
+
             case "B":
                 for(int i = 0; i < turn; i++) {
                     spinCorner(2, 1, 5, 6);
@@ -121,6 +136,11 @@ public class RubiksCube {
                     editParity(6);
                 }
                 break;
+            
+            case "b":
+                turnFace("B", turn);
+                turnFace("S", 4 - turn);
+                break;
 
             case "L":
                 for(int i = 0; i < turn; i++) {
@@ -134,6 +154,11 @@ public class RubiksCube {
                 }
                 break;
 
+            case "l":
+                turnFace("L", turn);
+                turnFace("M", turn);
+                break;
+
             case "R":
                 for(int i = 0; i < turn; i++) {
                     spinCorner(1, 0, 4, 5);
@@ -144,6 +169,11 @@ public class RubiksCube {
                     editSpin(4, +1);
                     editSpin(5, -1);
                 }
+                break;
+
+            case "r":
+                turnFace("R", turn);
+                turnFace("M", 4 - turn);
                 break;
 
             case "M":
