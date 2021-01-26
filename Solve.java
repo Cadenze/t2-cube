@@ -761,9 +761,11 @@ public class Solve extends RubiksCube {
      * Updates metrics and moves for third layer.
      * @param moves Singmaster notation for multiple moves
      */
-    private void updateThird(String moves) {
-        moves(moves);
-        updateMetrics(moves);
+    protected void updateThird(String moves) {
+        if(!moves.isEmpty()) {
+            moves(moves);
+            updateMetrics(moves);
+        }
     }
 
     /**
