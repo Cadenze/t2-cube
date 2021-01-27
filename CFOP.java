@@ -1,11 +1,7 @@
 import java.util.Arrays;
 
 public class CFOP extends Solve {
-    public static void main(String[] args) {
-        CFOP gan = new CFOP("F2 L2 R D F2 U' L2 U D' L2 R' B F U' D' F L' R' L F2");
-        gan.printCube();
-    }
-
+    
     /**
      * Initializes a solved cube. (No work done)
      */
