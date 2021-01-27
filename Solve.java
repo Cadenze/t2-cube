@@ -206,7 +206,7 @@ public class Solve extends RubiksCube {
                     updateFirst("R U' B U");
                     break;
                 case(2):
-                    updateFirst("B' R");
+                    updateFirst("B' R'");
                     break;
                 case(3):
                     updateFirst("L U F U'");
@@ -587,6 +587,9 @@ public class Solve extends RubiksCube {
      */
     public void oll1() {
         boolean[] parity = {getParity(0), getParity(1), getParity(2), getParity(3)};
+        if(parity[0] && parity[1] && parity[2]) {
+            return;
+        }
         if(parity[0]) {
             if(parity[1]) { updateThird("U2 F U R U' R' F'"); }
             else if(parity[2]) { updateThird("U F R U R' U' F'"); }
@@ -675,7 +678,7 @@ public class Solve extends RubiksCube {
 
         switch(same) {
             case 0:
-                if(compareCells(2, 0, 2)) {
+                if(compareCells(2, 0, 1)) {
                     return;
                 } else {
                     updateThird("U2");

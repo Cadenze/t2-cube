@@ -1,7 +1,11 @@
 import java.util.Arrays;
 
 public class CFOP extends Solve {
-    
+    public static void main(String[] args) {
+        CFOP gan = new CFOP("F2 L2 R D F2 U' L2 U D' L2 R' B F U' D' F L' R' L F2");
+        gan.printCube();
+    }
+
     /**
      * Initializes a solved cube. (No work done)
      */
@@ -32,10 +36,13 @@ public class CFOP extends Solve {
      */
     public void solve() {
         cross();
-        f2l();
+        corners();
+        secondLayer();
         OLL state = new OLL();
         oll(state);
-        pll();
+        pll1();
+        pll2();
+        alignment();
     }
 
     /**
@@ -154,8 +161,8 @@ public class CFOP extends Solve {
                 if(pos0[1] - pos0[0] != 3) { relpos0 = pos0[1]; }
                 return (relpos0 + 4 - relposT) % 4;
             } else {
-                relpos0 = pos0[0];
-                return relposT % 2 - relpos0;
+                relpos0 = pos0[1];
+                return (relpos0 + 4 - relposT) % 2;
             }
         }
 
@@ -202,7 +209,7 @@ public class CFOP extends Solve {
          * @return Spin of Corner
          */
         int spinAfter1() {
-            if(posT[0] == 1) {
+            if(spin[posT[0]] == 1) {
                 return spin[(posT[0] + 1) % 4];
             } else {
                 return spin[(posT[1] + 1) % 4];
@@ -215,6 +222,9 @@ public class CFOP extends Solve {
          * @return true if double; false if not
          */
         boolean doubleExistence() {
+            if(zeroes == 1) {
+                return pos0[0] == posT[0] || pos0[0] == posT[1];
+            }
             return pos0[0] == posT[0] || pos0[1] == posT[0] || pos0[0] == posT[1] || pos0[1] == posT[1];
         }
 
@@ -402,7 +412,7 @@ public class CFOP extends Solve {
                 if(state.consecutiveZeroes()) {
                     code22 = 100 + state.relativePosition() * 10 + state.nextSpin();
                 } else {
-                    code22 = 200 + state.relativePosition() * 10 + state.nextSpin();
+                    code22 = 200 + state.relativePosition() * 10 + state.unaccompaniedSpin();
                 }
                 switch(code22) {
                     case 101: ollCase(44, state); break;
@@ -536,18 +546,18 @@ public class CFOP extends Solve {
             case 44: ollExecute(1, 0, "F U R U' R' F'", state); break;
             case 45: ollExecute(1, 2, "F R U R' U' F'", state); break;
             case 46: ollExecute(1, 0, "R' U' R' F R F' U R", state); break;
-            case 47: ollExecute(1, 2, 1, "R' U' R' F R F' R' F R F' U R", state); break;
+            case 47: ollExecute(1, 2, 2, "R' U' R' F R F' R' F R F' U R", state); break;
             case 48: ollExecute(2, 1, 1, "F R U R' U' R U R' U' F'", state); break;
             case 49: ollExecute(2, 1, 1, "r U' r2 U r2 U r2 U' r", state); break;
             case 50: ollExecute(2, 1, 1, "r' U r2 U' r2 U' r2 U r'", state); break;
-            case 51: ollExecute(1, 2, 1, "F U R U' R' U R U' R' F'", state); break;
-            case 52: ollExecute(1, 2, 1, "R U R' U R U' B U' B' R'", state); break;
-            case 53: ollExecute(2, 1, 2, "l' U2 L U L' U' L U L' U l", state); break;
-            case 54: ollExecute(2, 1, 2, "r U2 R' U' R U R' U' R U' r'", state); break;
+            case 51: ollExecute(1, 2, 2, "F U R U' R' U R U' R' F'", state); break;
+            case 52: ollExecute(1, 2, 2, "R U R' U R U' B U' B' R'", state); break;
+            case 53: ollExecute(true, 2, "l' U2 L U L' U' L U L' U l", state); break;
+            case 54: ollExecute(true, 3, "r U2 R' U' R U R' U' R U' r'", state); break;
             case 55: ollExecute(2, 1, 2, "R' F R U R U' R2 F' R2 U' R' U R U R'", state); break;
             case 56: ollExecute(1, 2, 1, "r' U' r U' R' U R U' R' U R r' U r", state); break;
             case 57: ollExecute(true, 3, "R U R' U' M' U R U' r'", state); break; /* cursed pls fix */
-            default: System.out.println("oll error.");
+            default: System.out.println("oll execute error.");
         }
     }
 
