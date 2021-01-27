@@ -3,10 +3,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Scrambler {
     public static void main(String[] args) {
-        generate(300);
+        Scanner kb = new Scanner(System.in);
+        System.out.print("Number of scrambles: ");
+        int num = kb.nextInt();
+        System.out.print("File name: ");
+        String file = kb.nextLine();
+        kb.close();
+        if(file.isEmpty()) {
+            generate(num);
+        } else {
+            generate(num, file);
+        }
     }
 
     /**
