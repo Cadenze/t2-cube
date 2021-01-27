@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class CFOP extends Solve {
-    
+
     /**
      * Initializes a solved cube. (No work done)
      */
@@ -350,6 +350,10 @@ public class CFOP extends Solve {
         }
     }
 
+    /**
+     * Matches the cube to an OLL state.
+     * @param state the OLL state
+     */
     public void oll(OLL state) {
         final String ERROR = "oll error.";
         int t0code = 0;
@@ -380,7 +384,7 @@ public class CFOP extends Solve {
 
             case 20:
                 switch(state.consecutiveSpins()) {
-                    case 112: ollCase(49, state); break;
+                    case 112: ollCase(49, state); break; /* L */
                     case 121: ollCase(53, state); break;
                     case 122: ollCase(48, state); break;
                     case 211: ollCase(50, state); break;
@@ -392,13 +396,13 @@ public class CFOP extends Solve {
             case 21:
                 int code21 = state.relativePosition() * 10 + state.nextSpin();
                 switch(code21) {
-                    case 1: ollCase(6, state); break;
+                    case 1: ollCase(6, state); break; /* Square */
                     case 2: ollCase(5, state); break;
-                    case 11: ollCase(12, state); break;
+                    case 11: ollCase(12, state); break; /* Small lightning */
                     case 12: ollCase(7, state); break;
-                    case 21: ollCase(9, state); break;
+                    case 21: ollCase(9, state); break; /* Fish */
                     case 22: ollCase(10, state); break;
-                    case 31: ollCase(8, state); break;
+                    case 31: ollCase(8, state); break; /* Small Lightning */
                     case 32: ollCase(11, state); break;
                     default: System.out.println(ERROR);
                 }
@@ -411,17 +415,17 @@ public class CFOP extends Solve {
                     code22 = 200 + state.relativePosition() * 10 + state.unaccompaniedSpin();
                 }
                 switch(code22) {
-                    case 101: ollCase(44, state); break;
+                    case 101: ollCase(44, state); break; /* P */
                     case 102: ollCase(32, state); break;
-                    case 111: ollCase(41, state); break;
+                    case 111: ollCase(41, state); break; /* Awkward */
                     case 112: ollCase(30, state); break;
                     case 121: ollCase(42, state); break;
                     case 122: ollCase(29, state); break;
-                    case 131: ollCase(43, state); break;
+                    case 131: ollCase(43, state); break; /* P */
                     case 132: ollCase(31, state); break;
-                    case 201: ollCase(36, state); break;
+                    case 201: ollCase(36, state); break; /* W */
                     case 202: ollCase(38, state); break;
-                    case 211: ollCase(37, state); break;
+                    case 211: ollCase(37, state); break; /* Fish */
                     case 212: ollCase(35, state); break;
                     default: System.out.println(ERROR);
                 }
@@ -430,7 +434,7 @@ public class CFOP extends Solve {
 
             case 30:
                 switch(state.edgeSpin()) {
-                    case 11: ollCase(55, state); break;
+                    case 11: ollCase(55, state); break; /* I */
                     case 22: ollCase(56, state); break;
                     case 12: case 21:
                         if(state.spinAfter1() == 1) {
@@ -449,7 +453,7 @@ public class CFOP extends Solve {
                 }
                 code31 += state.nextSpin();
                 switch(code31) {
-                    case 1: ollCase(14, state); break;
+                    case 1: ollCase(14, state); break; /* Knight */
                     case 2: ollCase(15, state); break;
                     case 11: ollCase(16, state); break;
                     case 12: ollCase(13, state); break;
@@ -464,11 +468,11 @@ public class CFOP extends Solve {
                     code32 = 200 + state.edgeSpin();
                 }
                 switch(code32) {
-                    case 101: ollCase(46, state); break;
+                    case 101: ollCase(46, state); break; /* C */
                     case 102: ollCase(34, state); break;
-                    case 110: case 111: case 112: ollCase(45, state); break;
+                    case 110: case 111: case 112: ollCase(45, state); break; /* T */
                     case 120: case 121: case 122: ollCase(33, state); break;
-                    case 200: case 201: case 202: ollCase(39, state); break;
+                    case 200: case 201: case 202: ollCase(39, state); break; /* Big lightning */
                     case 210: case 211: case 212: 
                     case 220: case 221: case 222: ollCase(40, state); break;
                     default: System.out.println(ERROR);
@@ -489,70 +493,75 @@ public class CFOP extends Solve {
                 else if(state.nextSpin() == 1) { ollCase(23, state); }
                 else { ollCase(24, state); }
                 break;
-            case 44: break;
+            case 44: break; /* OLL skip */
             default: System.out.println(ERROR);
         }
     }
 
+    /**
+     * Given a case, performs the moves needed to finish OLL/
+     * @param number OLL case
+     * @param state OLL state
+     */
     private void ollCase(int number, OLL state) {
         switch(number) {
-            case 1: ollExecute(1, 2, 1, "R U2 R2 F R F' U2 R' F R F'", state); break;
-            case 2: ollExecute(1, 1, 2, "r U r' U2 r U2 R' U2 R U' r'", state); break;
-            case 3: ollExecute(0, 3, "r' R2 U R' U r U2 r' U M'", state); break;
-            case 4: ollExecute(0, 0, "M U' r U2 r' U' R U' R' M'", state); break;
-            case 5: ollExecute(0, 2, "l' U2 L U L' U l", state); break;
-            case 6: ollExecute(0, 1, "r U2 R' U' R U' r'", state); break;
-            case 7: ollExecute(0, 3, "r U R' U R U2 r'", state); break;
-            case 8: ollExecute(0, 0, "l' U' L U' L' U2 l", state); break;
-            case 9: ollExecute(0, 0, "R U R' U' R' F R2 U R' U' F'", state); break;
-            case 10: ollExecute(0, 1, "R U R' U R' F R F' R U2 R'", state); break;
-            case 11: ollExecute(0, 1, "r U R' U R' F R F' R U2 r'", state); break;
-            case 12: ollExecute(0, 2, "M' R' U' R U' R' U2 R U' R r'", state); break;
-            case 13: ollExecute(0, 3, "F U R U' R2 F' R U R U' R'", state); break;
-            case 14: ollExecute(0, 0, "R' F R U R' F' R F U' F'", state); break;
-            case 15: ollExecute(0, 2, "l' U' l L' U' L U l' U l", state); break;
-            case 16: ollExecute(0, 1, "r U r' R U R' U' r U' r'", state); break;
-            case 17: ollExecute(1, 3, "F R' F' R2 r' U R U' R' U' M'", state); break;
-            case 18: ollExecute(2, 0, "r U R' U R U2 r2 U' R U' R' U2 r", state); break;
-            case 19: ollExecute(1, 0, "r' R U R U R' U' M' R' F R F'", state); break;
-            case 20: updateThird("r U R' U' M2 U R U' R' U' M'"); break;
-            case 21: ollExecute(2, 1, 2, "R U2 R' U' R U R' U' R U' R'", state); break;
-            case 22: ollExecute(2, 1, 1, "R U2 R2 U' R2 U' R2 U2 R", state); break;
-            case 23: ollExecute(1, 1, "R2 D' R U2 R' D R U2 R", state); break;
-            case 24: ollExecute(2, 2, "r U R' U' r' F R F'", state); break;
-            case 25: ollExecute(2, 0, "F' r U R' U' r' F R", state); break;
-            case 26: ollExecute(0, 1, "R U2 R' U' R U' R'", state); break;
-            case 27: ollExecute(0, 3, "R U R' U R U2 R'", state); break;
-            case 28: ollExecute(true, 3, "r U R' U' r' R U R U' R'", state); break;
-            case 29: ollExecute(2, 2, "R U R' U' R U' R' F' U' F R U R'", state); break;
-            case 30: ollExecute(1, 2, "F R' F R2 U' R' U' R U R' F2", state); break;
-            case 31: ollExecute(2, 2, "R' U' F U R U' R' F' R", state); break;
-            case 32: ollExecute(2, 0, "L U F' U' L' U L F L'", state); break;
-            case 33: ollExecute(1, 3, "R U R' U' R' F R F'", state); break;
-            case 34: ollExecute(2, 1, "R U R2 U' R' F R U R U' F'", state); break;
-            case 35: ollExecute(1, 3, "R U2 R2 F R F' R U2 R'", state); break;
-            case 36: ollExecute(1, 1, "L' U' L U' L' U L U L F' L' F", state); break;
-            case 37: ollExecute(1, 3, "F R' F' R U R U' R'", state); break;
-            case 38: ollExecute(1, 0, "R U R' U R U' R' U' R' F R F'", state); break;
-            case 39: ollExecute(1, 0, "L F' L' U' L U F U' L'", state); break;
-            case 40: ollExecute(1, 1, "R' F R U R' U' F' U R", state); break;
-            case 41: ollExecute(1, 1, "R U R' U R U2 R' F R U R' U' F'", state); break;
-            case 42: ollExecute(2, 0, "R' U' R U' R' U2 R F R U R' U' F'", state); break;
-            case 43: ollExecute(1, 2, "F' U' L' U L F", state); break;
-            case 44: ollExecute(1, 0, "F U R U' R' F'", state); break;
-            case 45: ollExecute(1, 2, "F R U R' U' F'", state); break;
-            case 46: ollExecute(1, 0, "R' U' R' F R F' U R", state); break;
-            case 47: ollExecute(1, 2, 2, "R' U' R' F R F' R' F R F' U R", state); break;
-            case 48: ollExecute(2, 1, 1, "F R U R' U' R U R' U' F'", state); break;
-            case 49: ollExecute(2, 1, 1, "r U' r2 U r2 U r2 U' r", state); break;
-            case 50: ollExecute(2, 1, 1, "r' U r2 U' r2 U' r2 U r'", state); break;
-            case 51: ollExecute(1, 2, 2, "F U R U' R' U R U' R' F'", state); break;
-            case 52: ollExecute(1, 2, 2, "R U R' U R U' B U' B' R'", state); break;
-            case 53: ollExecute(true, 2, "l' U2 L U L' U' L U L' U l", state); break;
-            case 54: ollExecute(true, 3, "r U2 R' U' R U R' U' R U' r'", state); break;
-            case 55: ollExecute(2, 1, 2, "R' F R U R U' R2 F' R2 U' R' U R U R'", state); break;
-            case 56: ollExecute(1, 2, 1, "r' U' r U' R' U R U' R' U R r' U r", state); break;
-            case 57: ollExecute(true, 3, "R U R' U' M' U R U' r'", state); break; /* cursed pls fix */
+            case 1: ollExecute(1, 2, 1, "R U2 R2 F R F' U2 R' F R F'", state); break; /* Runway */
+            case 2: ollExecute(1, 1, 2, "r U r' U2 r U2 R' U2 R U' r'", state); break; /* Zamboni */
+            case 3: ollExecute(0, 3, "r' R2 U R' U r U2 r' U M'", state); break; /* Anti-nazi */
+            case 4: ollExecute(0, 0, "M U' r U2 r' U' R U' R' M'", state); break; /* Nazi */
+            case 5: ollExecute(0, 2, "l' U2 L U L' U l", state); break; /* Right back wide anti-sune */
+            case 6: ollExecute(0, 1, "r U2 R' U' R U' r'", state); break; /* Right front wide anti-sune */
+            case 7: ollExecute(0, 3, "r U R' U R U2 r'", state); break; /* Wide sune */
+            case 8: ollExecute(0, 0, "l' U' L U' L' U2 l", state); break; /* Left wide sune */
+            case 9: ollExecute(0, 0, "R U R' U' R' F R2 U R' U' F'", state); break; /* Kite */
+            case 10: ollExecute(0, 1, "R U R' U R' F R F' R U2 R'", state); break; /* Anti-kite */
+            case 11: ollExecute(0, 1, "r U R' U R' F R F' R U2 r'", state); break; /* Downstairs */
+            case 12: ollExecute(0, 2, "M' R' U' R U' R' U2 R U' R r'", state); break; /* Upstairs */
+            case 13: ollExecute(0, 3, "F U R U' R2 F' R U R U' R'", state); break; /* Gun */
+            case 14: ollExecute(0, 0, "R' F R U R' F' R F U' F'", state); break; /* Anti-gun */
+            case 15: ollExecute(0, 2, "l' U' l L' U' L U l' U l", state); break; /* Squeegee */
+            case 16: ollExecute(0, 1, "r U r' R U R' U' r U' r'", state); break; /* Anti-squeegee */
+            case 17: ollExecute(1, 3, "F R' F' R2 r' U R U' R' U' M'", state); break; /* Slash */
+            case 18: ollExecute(2, 0, "r U R' U R U2 r2 U' R U' R' U2 r", state); break; /* Crown */
+            case 19: ollExecute(1, 0, "r' R U R U R' U' M' R' F R F'", state); break; /* Bunny */
+            case 20: updateThird("r U R' U' M2 U R U' R' U' M'"); break; /* X */
+            case 21: ollExecute(2, 1, 2, "R U2 R' U' R U R' U' R U' R'", state); break; /* Double sune */
+            case 22: ollExecute(2, 1, 1, "R U2 R2 U' R2 U' R2 U2 R", state); break; /* Pi */
+            case 23: ollExecute(1, 1, "R2 D' R U2 R' D R U2 R", state); break; /* Headlights */
+            case 24: ollExecute(2, 2, "r U R' U' r' F R F'", state); break; /* Chameleon */
+            case 25: ollExecute(2, 0, "F' r U R' U' r' F R", state); break; /* Bowtie */
+            case 26: ollExecute(0, 1, "R U2 R' U' R U' R'", state); break; /* Anti-sune */
+            case 27: ollExecute(0, 3, "R U R' U R U2 R'", state); break; /* Sune */
+            case 28: ollExecute(true, 3, "r U R' U' r' R U R U' R'", state); break; /* Arrow */
+            case 29: ollExecute(2, 2, "R U R' U' R U' R' F' U' F R U R'", state); break; /* Spotted chameleon */
+            case 30: ollExecute(1, 2, "F R' F R2 U' R' U' R U R' F2", state); break; /* Anti-spotted chameleon */
+            case 31: ollExecute(2, 2, "R' U' F U R U' R' F' R", state); break; /* Couch */
+            case 32: ollExecute(2, 0, "L U F' U' L' U L F L'", state); break; /* Anti-couch */
+            case 33: ollExecute(1, 3, "R U R' U' R' F R F'", state); break; /* Key */
+            case 34: ollExecute(2, 1, "R U R2 U' R' F R U R U' F'", state); break; /* City */
+            case 35: ollExecute(1, 3, "R U2 R2 F R F' R U2 R'", state); break; /* Fish salad */
+            case 36: ollExecute(1, 1, "L' U' L U' L' U L U L F' L' F", state); break; /* Wario */
+            case 37: ollExecute(1, 3, "F R' F' R U R U' R'", state); break; /* Mounted fish */
+            case 38: ollExecute(1, 0, "R U R' U R U' R' U' R' F R F'", state); break; /* Mario */
+            case 39: ollExecute(1, 0, "L F' L' U' L U F U' L'", state); break; /* Fung */
+            case 40: ollExecute(1, 1, "R' F R U R' U' F' U R", state); break; /* Anti-fung */
+            case 41: ollExecute(1, 1, "R U R' U R U2 R' F R U R' U' F'", state); break; /* Awkward fish */
+            case 42: ollExecute(2, 0, "R' U' R U' R' U2 R F R U R' U' F'", state); break; /* Lefty awkward fish */
+            case 43: ollExecute(1, 2, "F' U' L' U L F", state); break; /* Anti-P */
+            case 44: ollExecute(1, 0, "F U R U' R' F'", state); break; /* P */
+            case 45: ollExecute(1, 2, "F R U R' U' F'", state); break; /* T */
+            case 46: ollExecute(1, 0, "R' U' R' F R F' U R", state); break; /* C & Headlights */
+            case 47: ollExecute(1, 2, 2, "R' U' R' F R F' R' F R F' U R", state); break; /* Anti-breakneck */
+            case 48: ollExecute(2, 1, 1, "F R U R' U' R U R' U' F'", state); break; /* Breakneck */
+            case 49: ollExecute(2, 1, 1, "r U' r2 U r2 U r2 U' r", state); break; /* Right back squeezy */
+            case 50: ollExecute(2, 1, 1, "r' U r2 U' r2 U' r2 U r'", state); break; /* Right front squeezy */
+            case 51: ollExecute(1, 2, 2, "F U R U' R' U R U' R' F'", state); break; /* Ant */
+            case 52: ollExecute(1, 2, 2, "R U R' U R U' B U' B' R'", state); break; /* Rice cooker */
+            case 53: ollExecute(true, 2, "l' U2 L U L' U' L U L' U l", state); break; /* Frying pan */
+            case 54: ollExecute(true, 3, "r U2 R' U' R U R' U' R U' r'", state); break; /* Anti-frying pan */
+            case 55: ollExecute(2, 1, 2, "R' F R U R U' R2 F' R2 U' R' U R U R'", state); break; /* Highway */
+            case 56: ollExecute(1, 2, 1, "r' U' r U' R' U R U' R' U R r' U r", state); break; /* Streetlights */
+            case 57: ollExecute(true, 3, "R U R' U' M' U R U' r'", state); break; /* H (cursed pls fix) */
             default: System.out.println("oll execute error.");
         }
     }

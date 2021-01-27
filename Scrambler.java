@@ -9,10 +9,19 @@ public class Scrambler {
         generate(300);
     }
 
+    /**
+     * Generates a specified amount of scrambles.
+     * @param lines Number of scrambles
+     */
     public static void generate(int lines) {
         generate(lines, "scrambles.txt");
     }
 
+    /**
+     * Generates a specified amount of scrambles.
+     * @param lines Number of scrambles
+     * @param fileName File name of the scrambles
+     */
     public static void generate(int lines, String fileName) {
         try {
             File scrambles = new File(fileName);
@@ -39,8 +48,11 @@ public class Scrambler {
         }
     }
 
+    /**
+     * Returns a single scramble.
+     */
     public static String scramble() {
-        Random r = new Random();
+        Random r = new Random(); /* shhhh linter im only using this random once*/ 
         String[] cells = new String[r.nextInt(10) + 18];
         cells[0] = translate(r.nextInt(6), r.nextInt(3));
         do {
@@ -64,6 +76,12 @@ public class Scrambler {
         return result.toString();
     }
 
+    /**
+     * Given random integers, generates a valid move.
+     * @param face
+     * @param move
+     * @return Singmaster notation for a single move
+     */
     public static String translate(int face, int move) {
         String sequence = "";
         switch(face) {
@@ -85,20 +103,44 @@ public class Scrambler {
         }
     }
 
+    /**
+     * Checks whether the two moves move identical faces.
+     * @param move1 Singmaster notation for a single move
+     * @param move2 Singmaster notation for a single move
+     * @return true if same; false if not
+     */
     protected static boolean identical(String move1, String move2) {
         return move1.substring(0,1).equals(move2.substring(0,1));
     }
 
+    /**
+     * Checks whether the three moves are moving two opposite faces.
+     * @param move1 Singmaster notation for a single move
+     * @param move2 Singmaster notation for a single move
+     * @param move3 Singmaster notation for a single move
+     * @return true if opposite, false if not
+     */
     protected static boolean opposite(String move1, String move2, String move3) {
         return identical(move1, move3) && opposite(move2, move3);
     }
 
+    /**
+     * Checks whether the two moves are opposite each other.
+     * @param move1 Singmaster notation for a single move
+     * @param move2 Singmaster notation for a single move
+     * @return true if opposite, false if not
+     */
     private static boolean opposite(String move1, String move2) {
         int one = numbering(move1);
         int two = numbering(move2);
         return Math.abs(one - two) == 3;
     }
 
+    /**
+     * Turns face back into a number for opposite checking.
+     * @param face
+     * @return a number
+     */
     private static int numbering(String face) {
         switch(face) {
             case "U": return 0;
