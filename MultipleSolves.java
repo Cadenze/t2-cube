@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,12 +12,14 @@ public class MultipleSolves {
         Scanner kb = new Scanner(System.in);
         System.out.print("Input scramble or text file: ");
         String input = kb.nextLine();
-        kb.close();
         if (input.contains(".")) {
-            stats(input);
+            System.out.print("Output file name: ");
+            String output = kb.nextLine();
+            stats(input, output);
         } else {
             scramble(input);
         }
+        kb.close();
     }
 
     /**
@@ -35,9 +38,9 @@ public class MultipleSolves {
      * Retrieves the statistics on multiple scrambles.
      * @param file .txt files containing a scramble per line
      */
-    public static void stats(String file) throws FileNotFoundException {
+    public static void stats(String file, String output) throws FileNotFoundException {
         try {
-            File csv = new File("statistics.csv");
+            File csv = new File(output);
             if (!csv.createNewFile()) {
                 System.out.println("File already exists.");
                 return;
@@ -50,16 +53,17 @@ public class MultipleSolves {
 
         try (
             Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
-            FileWriter pen = new FileWriter("statistics.csv");
+            BufferedWriter pen = new BufferedWriter(new FileWriter(output));
         ) {
             while(explorer.hasNextLine()) {
                 String sequence = explorer.nextLine();
-                Solve cube = new Solve(sequence);
+                CFOP cube = new CFOP(sequence);
                 boolean solved = cube.checkSolved();
                 int qtm = cube.getQTM();
                 int htm = cube.getHTM();
                 int stm = cube.getSTM();
                 pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm);
+                pen.newLine();
             }
         } catch(IOException e) {
             System.out.println("An error occurred.");
