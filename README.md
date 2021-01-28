@@ -28,7 +28,7 @@ We aim to be able to compare and contrast the common speedcubing methods not onl
     - CFOP
     - Roux
     - ZZ(?)
-* Mass solve
+* ~~Mass solve~~
 * Statistics
 
 When this list is entirely crossed out, I will be basically done with my first year of my undergraduate degree.

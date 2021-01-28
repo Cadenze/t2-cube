@@ -738,7 +738,7 @@ public class Solve extends RubiksCube {
      * Updates metrics, moves, and stores the moves for first layer.
      * @param moves Singmaster notation for multiple moves
      */
-    private void updateFirst(String moves) {
+    protected void updateFirst(String moves) {
         moves(moves);
         updateMetrics(moves);
         if(!movesFirst.equals("") && !movesFirst.endsWith(" ")) {
@@ -751,13 +751,15 @@ public class Solve extends RubiksCube {
      * Updates metrics, moves, and stores the moves for second layer.
      * @param moves Singmaster notation for multiple moves
      */
-    private void updateSecond(String moves) {
-        moves(moves);
-        updateMetrics(moves);
-        if(!movesSecond.equals("") && !movesSecond.endsWith(" ")) {
-            movesSecond += " ";
+    protected void updateSecond(String moves) {
+        if(!moves.isEmpty()) {
+            moves(moves);
+            updateMetrics(moves);
+            if(!movesSecond.equals("") && !movesSecond.endsWith(" ")) {
+                movesSecond += " ";
+            }
+            movesSecond += moves;
         }
-        movesSecond += moves;
     }
 
     /**

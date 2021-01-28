@@ -32,8 +32,7 @@ public class CFOP extends Solve {
      */
     public void solve() {
         cross();
-        corners();
-        secondLayer();
+        f2l();
         OLL state = new OLL();
         oll(state);
         pll1();
@@ -42,10 +41,321 @@ public class CFOP extends Solve {
     }
 
     /**
+     * An object to evaluate an F2L scenario.
+     * Is recursively called up to 3 times.
+     */
+    class F2L {
+        private int edge;
+        private int corner;
+        private boolean parity;
+        private int spin;
+        private int iteration;
+
+        /**
+         * Stores the variables that identifies the F2L case.
+         * @param corner cubelet
+         * @param edge cubelet
+         * @param natural parity
+         */
+        F2L(Corner corner, Edge edge, boolean natural, int iteration) {
+            this.edge = findEdge(edge);
+            this.corner = findCorner(corner);
+            parity = getParity(this.edge) == natural;
+            spin = getSpin(this.corner);
+            this.iteration = iteration;
+        }
+
+        /**
+         * Identifies whether the pair needs to be extracted before insertion.
+         * @return Extraction code
+         */
+        int extractionCode() {
+            int code = 0;
+            if(edge < 4) { code += 10; }
+            else if(edge > 4) { code += 20; }
+            if(corner < 4) { code++; }
+            else if(corner > 4) { code += 2; }
+            return code;
+        }
+
+        /**
+         * Returns the parity and spin of a pair.
+         * For edge and/or spin in place.
+         * @return Parity-spin code
+         */
+        int paritySpinCode() {
+            int code = 0;
+            if(parity) { code += 10; }
+            code += spin;
+            return code;
+        }
+
+        /**
+         * Returns the delta on top layer, parity, and spin of a pair.
+         * For when both are on U layer.
+         * @return Delta-parity-spin code
+         */
+        int deltaParitySpinCode() {
+            int delta = (edge + 4 - corner) % 4;
+            return delta * 100 + paritySpinCode();
+        }
+
+        /**
+         * Retrieves the position of the corner.
+         * @return position
+         */
+        int getCornerPosition() {
+            return corner;
+        }
+
+        /**
+         * Retrieves the position of the edge.
+         * @return position
+         */
+        int getEdgePosition() {
+            return edge;
+        }
+
+        /**
+         * Returns how many F2l pairs are inserted before this.
+         * @return iteration
+         */
+        int getIteration() {
+            return iteration;
+        }
+
+        /**
+         * Return the moves needed to align a corner into a specific position.
+         * @param position Destination
+         * @return Singmaster move
+         */
+        String alignCorner(int position) {
+            int diff = (corner + 4 - position) % 4;
+            switch(diff) {
+                case 0: return "";
+                case 1: return "U";
+                case 2: return "U2";
+                case 3: return "U'";
+                default: System.out.println("align error."); return "";
+            }
+        }
+
+        /**
+         * Return the moves needed to align an edge into a specific position.
+         * @param position Destination
+         * @return Singmaster move
+         */
+        String alignEdge(int position) {
+            int diff = (edge + 4 - position) % 4;
+            switch(diff) {
+                case 0: return "";
+                case 1: return "U";
+                case 2: return "U2";
+                case 3: return "U'";
+                default: System.out.println("align error."); return "";
+            }
+        }
+
+        /**
+         * Returns the extraction sequence for a corner-edge pair from position.
+         * @param position
+         */
+        String extraction(int position) {
+            switch(position) {
+                case 5: return "R' U R";
+                case 6: return "L U L'";
+                case 7: return "L' U' L";
+                default: System.out.println("Extraction error.");
+            }
+            return "";
+        }
+    }
+
+    /**
      * Completes the first two layers.
      */
     public void f2l() {
-        
+        updateFirst("z2");
+        f2lIdentify(Corner.WHITE_RED_GREEN, Edge.RED_GREEN, true, 0);
+        updateFirst("y"); 
+        f2lIdentify(Corner.WHITE_GREEN_ORANGE, Edge.ORANGE_GREEN, false, 1);
+        updateFirst("y");
+        f2lIdentify(Corner.WHITE_ORANGE_BLUE, Edge.ORANGE_BLUE, true, 2);
+        updateFirst("y");
+        f2lIdentify(Corner.WHITE_BLUE_RED, Edge.RED_BLUE, false, 3);
+    }
+
+    /**
+     * Identifies the F2L case.
+     * @param corner position
+     * @param edge position
+     * @param natural parity
+     * @param iteration How many corners inserted before?
+     */
+    public void f2lIdentify(Corner corner, Edge edge, boolean natural, int iteration) {
+        F2L pair = new F2L(corner, edge, natural, iteration);
+        final String ERROR = "f2l identify error.";
+        switch(pair.extractionCode()) {
+            case 0: switch(pair.paritySpinCode()) {
+                case 0: f2lCase(38, pair); break;
+                case 1: f2lCase(41, pair); break;
+                case 2: f2lCase(42, pair); break;
+                case 10: f2lCase(37, pair); break;
+                case 11: f2lCase(39, pair); break;
+                case 12: f2lCase(40, pair); break;
+                default: System.out.println(ERROR);
+            } return;
+            case 1: switch(pair.paritySpinCode()) {
+                case 0: f2lCase(31, pair); break;
+                case 1: f2lCase(36, pair); break;
+                case 2: f2lCase(35, pair); break;
+                case 10: f2lCase(32, pair); break;
+                case 11: f2lCase(34, pair); break;
+                case 12: f2lCase(33, pair); break;
+                default: System.out.println(ERROR);
+            } return;
+            case 10: switch(pair.paritySpinCode()) {
+                case 0: f2lCase(26, pair); break;
+                case 1: f2lCase(29, pair); break;
+                case 2: f2lCase(28, pair); break;
+                case 10: f2lCase(25, pair); break;
+                case 11: f2lCase(27, pair); break;
+                case 12: f2lCase(30, pair); break;
+                default: System.out.println(ERROR);
+            } return;
+            case 11: switch(pair.deltaParitySpinCode()) {
+                case 0: f2lCase(18, pair); break;
+                case 1: f2lCase(2, pair); break;
+                case 2: f2lCase(13, pair); break;
+                case 10: f2lCase(23, pair); break;
+                case 11: f2lCase(12, pair); break;
+                case 12: f2lCase(15, pair); break;
+                case 100: f2lCase(24, pair); break;
+                case 101: f2lCase(16, pair); break;
+                case 102: f2lCase(11, pair); break;
+                case 110: f2lCase(17, pair); break;
+                case 111: f2lCase(14, pair); break;
+                case 112: f2lCase(1, pair); break;
+                case 200: f2lCase(22, pair); break;
+                case 201: f2lCase(8, pair); break;
+                case 202: f2lCase(9, pair); break;
+                case 210: f2lCase(19, pair); break;
+                case 211: f2lCase(4, pair); break;
+                case 212: f2lCase(5, pair); break;
+                case 300: f2lCase(20, pair); break;
+                case 301: f2lCase(6, pair); break;
+                case 302: f2lCase(3, pair); break;
+                case 310: f2lCase(21, pair); break;
+                case 311: f2lCase(10, pair); break;
+                case 312: f2lCase(7, pair); break;
+                default: System.out.println(ERROR);
+            } return;
+            case 2:
+                updateSecond(pair.extraction(pair.getCornerPosition()));
+                break;
+            case 20: case 22:
+                updateSecond(pair.extraction(pair.getEdgePosition()));
+                break;
+            case 12:
+                updateSecond(pair.alignEdge(1));
+                updateSecond(pair.extraction(pair.getCornerPosition()));
+                break;
+            case 21:
+                updateSecond(pair.alignCorner(1));
+                updateSecond(pair.extraction(pair.getEdgePosition()));
+                break;
+            default: System.out.println(ERROR); return;
+        }
+
+        f2lIdentify(corner, edge, natural, iteration);
+    }
+
+    /**
+     * Given a case number, matches it with the F2L algorithm
+     * @param number F2L case
+     * @param pair the F2L pair
+     */
+    private void f2lCase(int number, F2L pair) {
+        switch(number) {
+            case 1: f2lExecuteEdge(0, "R U' R'", pair); break;
+            case 2: f2lExecuteEdge(1, "F' U F", pair); break;
+            case 3: f2lExecuteEdge(3, "F' U' F", pair); break;
+            case 4: f2lExecuteEdge(2, "R U R'", pair); break;
+            case 5: if(pair.getIteration() == 3) { f2lExecuteEdge(3, "R U R' U2 R U' R'", pair); }
+                else { f2lExecuteEdge(1, "R F R' F' R'", pair); } break;
+            case 6: if(pair.getIteration() == 3) { f2lExecuteEdge(3, "R2 B U B' U' R2", pair); }
+                else { f2lExecuteEdge(0, "R F R F' R'", pair); } break;
+            case 7: f2lExecuteEdge(0, "R U2 R' U2 R U' R'", pair); break;
+            case 8: f2lExecuteEdge(2, "d R' U2 R U2 R' U R y", pair); break;
+            case 9: if(pair.getIteration() == 3) { f2lExecuteEdge(3, "R U' R' d R' U' R y", pair); }
+                else { f2lExecuteEdge(2, "R' U' R F' U' F", pair); } break;
+            case 10: if(pair.getIteration() == 3) { f2lExecuteEdge(0, "R U R' U R U R'", pair); }
+                else { f2lExecuteEdge(3, "R' U R2 U R'", pair); } break;
+            case 11: f2lExecuteEdge(2, "R U2 R' d R' U' R y", pair); break;
+            case 12: if(pair.getIteration() == 3) { f2lExecuteEdge(0, "R U' R' U R U' R' U2 R U' R'", pair); }
+                else { f2lExecuteEdge(0, "R' U2 R2 U R'", pair); } break;
+            case 13: if(pair.getIteration() == 3) { f2lExecuteEdge(0, "d R' U R U' R' U' R y", pair); }
+                else { f2lExecuteEdge(0, "R' U R F' U' F", pair); } break;
+            case 14: f2lExecuteEdge(2, "R U' R' U R U R'", pair); break;
+            case 15: if(pair.getIteration() == 3) { f2lExecuteEdge(0, "M U L F' L' U' M'", pair); }
+                else { f2lExecuteEdge(1, "R' U R U' R U R'", pair); } break;
+            case 16: if(pair.getIteration() == 3) { f2lExecuteEdge(1, "R U' R' U d R' U' R y", pair); }
+                else { f2lExecuteEdge(1, "F' R' U' R U F", pair); } break;
+            case 17: f2lExecuteEdge(1, "R U2 R' U' R U R'", pair); break;
+            case 18: f2lExecuteEdge(0, "y' R' U2 R U R' U' R y", pair); break;
+            case 19: f2lExecuteEdge(1, "R U2 R' U R U' R'", pair); break;
+            case 20: f2lExecuteEdge(0, "F' U2 F2 R' F' R", pair); break;
+            case 21: f2lExecuteEdge(1, "R U R' U R U' R'", pair); break;
+            case 22: f2lExecuteEdge(2, "F' L' U2 L F", pair); break;
+            case 23: f2lExecuteEdge(2, "R2 U2 R' U' R U' R2", pair); break;
+            case 24: f2lExecuteEdge(0, "F' L' U L F R U R'", pair); break;
+            case 25: if(pair.getIteration() == 3) { f2lExecuteEdge(1, "R' U' R' U' R' U R U R", pair); }
+                else { f2lExecuteEdge(1, "R2 U' R' U R2", pair); } break;
+            case 26: f2lExecuteEdge(0, "y' R U R U R U' R' U' R' y", pair); break;
+            case 27: f2lExecuteEdge(1, "R U' R' U R U' R'", pair); break;
+            case 28: f2lExecuteEdge(0, "R U R' U' F R' F' R", pair); break;
+            case 29: f2lExecuteEdge(0, "y' R' U' R U R' U' R y", pair); break;
+            case 30: f2lExecuteEdge(1, "R U R' U' R U R'", pair); break;
+            case 31: f2lExecuteCorner(0, "R U' R' d R' U R y", pair); break;
+            case 32: f2lExecuteCorner(0, "R U R' U' R U R' U' R U R'", pair); break;
+            case 33: f2lExecuteCorner(1, "R U' R' U2 R U' R'", pair); break;
+            case 34: if(pair.getIteration() == 3) { f2lExecuteCorner(3, "F' U F U2 F' U F", pair); }
+                else { f2lExecuteCorner(0, "E' R U R' E", pair); } break;
+            case 35: f2lExecuteCorner(1, "R U R' d R' U' R y", pair); break;
+            case 36: f2lExecuteCorner(0, "d R' U' R d' R U R'", pair); break;
+            case 37: break;
+            case 38: if(pair.getIteration() == 3) { updateSecond("R' F R F' R U' R' U R U' R' U2 R U' R'"); }
+                else { updateSecond("R U' R2 U2 R U' F' U F"); } break;
+            case 39: updateSecond("R U' R' U' R U R' U2 R U' R'"); break;
+            case 40: updateSecond("R U' R' U R U2 R' U R U' R'"); break;
+            case 41: if(pair.getIteration() == 3) { updateSecond("R U' R' d R' U' R U' R' U' R y"); }
+                else { updateSecond("R U' R2 U' R y' R' U' R y"); } break;
+            case 42: if(pair.getIteration() == 0) { updateSecond("y' R' U R2 U R' y R U R'"); }
+                else { updateSecond("R U' R' U d R' U' R U' R' U R y"); } break;
+            default: System.out.println("f2l case error.");
+        }
+    }
+
+    /**
+     * Executes an F2L algorithm by anchoring a corner.
+     * @param position Corner position
+     * @param alg Algorithm to perform
+     * @param pair The F2L pair
+     */
+    private void f2lExecuteCorner(int position, String alg, F2L pair) {
+        updateSecond(pair.alignCorner(position));
+        updateSecond(alg);
+    }
+
+    /**
+     * Executes an F2L algorithm by anchoring an edge.
+     * @param position Edge position
+     * @param alg Algorithm to perform
+     * @param pair The F2L pair
+     */
+    private void f2lExecuteEdge(int position, String alg, F2L pair) {
+        updateSecond(pair.alignEdge(position));
+        updateSecond(alg);
     }
 
     /**
