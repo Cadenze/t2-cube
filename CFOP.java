@@ -26,17 +26,16 @@ public class CFOP extends Solve {
         super(sequence, solve);
     }
 
-    @Override
+    
     /**
      * Solves a cube using the CFOP method.
      */
+    @Override
     public void solve() {
         cross();
         f2l();
-        OLL state = new OLL();
-        oll(state);
-        pll1();
-        pll2();
+        oll();
+        pll();
         alignment();
     }
 
@@ -662,11 +661,11 @@ public class CFOP extends Solve {
 
     /**
      * Matches the cube to an OLL state.
-     * @param state the OLL state
      */
-    public void oll(OLL state) {
+    public void oll() {
         final String ERROR = "oll error.";
         int t0code = 0;
+        OLL state = new OLL();
 
         if(state.getTrues() == 2 && !state.consecutiveTrues()) {
             t0code += 30;
@@ -911,5 +910,357 @@ public class CFOP extends Solve {
     private void ollExecute(boolean parity, int secondPos, String alg, OLL state) {
         updateThird(state.alignment(parity, secondPos));
         updateThird(alg);
+    }
+
+    /**
+     * An object to store the state of the cube pre-PLL.
+     */
+    class PLL {
+        private int[][] colour;
+
+        PLL() {
+            Corner[] corners = { getCorner(0), getCorner(1), getCorner(2), getCorner(3), getCorner(4) };
+            Edge[] edges = { getEdge(0), getEdge(1), getEdge(2), getEdge(3) };
+            colour = new int[4][3];
+            for(int i = 0; i < 4; i++) {
+                colour[i][0] = colourIntoNumber(corners[(i + 3) % 4].colour(1));
+                colour[i][1] = colourIntoNumber(edges[i].colour(1));
+                colour[i][2] = colourIntoNumber(corners[i].colour(2));
+            }
+        }
+
+        /**
+         * Organizes the colours as numbers for easy comparison.
+         * @param colour Letter representing colour
+         * @return A number
+         */
+        int colourIntoNumber(String colour) {
+            switch(colour) {
+                case "r": return 1;
+                case "b": return 2;
+                case "o": return 3;
+                case "g": return 4;
+                default: return 0;
+            }
+        }
+
+        /**
+         * Checks whether it's a 0-1-2 triple.
+         * @param face
+         * @return true if triple
+         */
+        boolean isTriple(int face) {
+            return isLeftPair(face) && isRightPair(face); 
+        }
+
+        /**
+         * Checks whether it's a 0-1 pair.
+         * @param face
+         * @return true if pair
+         */
+        boolean isLeftPair(int face) {
+            return colour[face][0] == colour[face][1];
+        }
+
+        /**
+         * Checks whether it's a 1-2 pair.
+         * @param face
+         * @return true if pair
+         */
+        boolean isRightPair(int face) {
+            return colour[face][1] == colour[face][2];
+        }
+
+        /**
+         * Checks whether it's a 0-2 pair.
+         * @param face
+         * @return true if pair
+         */
+        boolean isSkipPair(int face) {
+            return colour[face][0] == colour[face][2];
+        }
+
+        /**
+         * Finds and returns the position of a 0-1-2 triple.
+         * Returns -1 if no triple found.
+         * @return Position if found; -1 if not.
+         */
+        int findTriple() {
+            for(int i = 0; i < 4; i++) {
+                if(isTriple(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Finds and returns the position of a 0-1 pair.
+         * Returns -1 if no pair found.
+         * @return Position if found; -1 if not
+         */
+        int findLeftPair() {
+            for(int i = 0; i < 4; i++) {
+                if(isLeftPair(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Finds and returns the position of a 1-2 pair.
+         * Returns -1 if no pair found.
+         * @return Position if found; -1 if not
+         */
+        int findRightPair() {
+            for(int i = 0; i < 4; i++) {
+                if(isRightPair(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Finds and returns the position of a 0-2 pair.
+         * Returns -1 if no pair found.
+         * @return Position if found; -1 if not
+         */
+        int findSkipPair() {
+            for(int i = 0; i < 4; i++) {
+                if(isSkipPair(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Encodes pairs and triples as a number.
+         * @param face
+         * @return Digit code
+         */
+        int patternEncode(int face) {
+            if(isTriple(face)) { return 1; }
+            else if(isSkipPair(face)) { return 2; }
+            else if(isLeftPair(face)) { return 3; }
+            else if(isRightPair(face)) { return 4; }
+            else { return 0; }
+        }
+        
+        /**
+         * Returns the pairs and triples of the other three sides.
+         * @param face
+         * @return 3 digit code
+         */
+        int codeSides(int face) {
+            int answer = 0;
+            answer += patternEncode((face + 1) % 4) * 100;
+            answer += patternEncode((face + 2) % 4) * 10;
+            answer += patternEncode((face + 3) % 4);
+            return answer;
+        }
+
+        /**
+         * Returns the pairs and triple situation.
+         * @return 4 digit code
+         */
+        int code() {
+            int face = findTriple();
+            if(face != -1) {
+                return 1000 + codeSides(face);
+            } else { face = findSkipPair(); }
+            if(face != -1) {
+                return 2000 + codeSides(face); 
+            } else { face = findRightPair(); }
+            if(face != -1) {
+                return 4000 + codeSides(face);
+            } else { face = findLeftPair(); }
+            if(face != -1) {
+                return 3000 + codeSides(face);
+            } else {
+                return 0;
+            }
+        }
+
+        /**
+         * Given the code case, returns the PLL case.
+         * @param code 4 digit code
+         * @return PLL case
+         */
+        String perm(int code) {
+            switch(code) {
+                case 0: return "E";
+                case 1000: return "F";
+                case 1111: return "skip";
+                case 1222: return "U";
+                case 1333: return "Ja";
+                case 1444: return "Jb";
+                case 2003: return "Gc";
+                case 2004: return "Rb";
+                case 2030: return "Gd";
+                case 2040: return "Gb";
+                case 2043: return "Ab";
+                case 2222: return "HZ";
+                case 2300: return "Ra";
+                case 2304: return "T";
+                case 2400: return "Ga";
+                case 2430: return "Aa";
+                case 3333: return "Nb";
+                case 4003: return "Y";
+                case 4300: return "V";
+                case 4444: return "Na";
+                default: System.out.println("perm error.");
+            }
+            return "skip";
+        }
+
+        /**
+         * Moves needed to align a pattern to a side.
+         * @param identifier Pattern code
+         * @param position Final desired position
+         * @return Singmaster moves.
+         */
+        String alignment(int identifier, int position) {
+            int pos = -1;
+            switch(identifier) {
+                case 1: pos = findTriple(); break;
+                case 2: pos = findSkipPair(); break;
+                case 3: pos = findLeftPair(); break;
+                case 4: pos = findRightPair(); break;
+                default: System.out.println("pll alignment error.");
+            }
+            int diff = (pos + 4 - position) % 4;
+            switch(diff) {
+                case 0: return "";
+                case 1: return "U";
+                case 2: return "U2";
+                case 3: return "U'";
+                default: return "pll alignment error.";
+            }
+        }
+    }
+
+    /**
+     * Executes the PLL case.
+     */
+    public void pll() {
+        PLL state = new PLL();
+        String perm = state.perm(state.code());
+        switch(perm) {
+            case "Aa":
+                updateThird(state.alignment(2, 2));
+                updateThird("x R' U R' D2 R U' R' D2 R2");
+                break;
+            case "Ab":
+                updateThird(state.alignment(2, 0));
+                updateThird("x' R U' R D2 R' U R D2 R2");
+                break;
+            case "F":
+                updateThird(state.alignment(1, 3));
+                updateThird("R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R");
+                break;
+            case "Ga":
+                updateThird(state.alignment(2, 3));
+                updateThird("R2 U R' U R' U' R U' R2 U' D R' U R D'");
+                break;
+            case "Gb":
+                updateThird(state.alignment(2, 3));
+                updateThird("R' U' R U D' R2 U R' U R U' R U' R2 D");
+                break;
+            case "Gc":
+                updateThird(state.alignment(2, 3));
+                updateThird("R2 U' R U' R U R' U R2 U D' R U' R' D");
+                break;
+            case "Gd":
+                updateThird(state.alignment(2, 3));
+                updateThird("R U R' U' D R2 U' R U' R' U R' U R2 D'");
+                break;
+            case "Ja":
+                updateThird(state.alignment(1, 3));
+                updateThird("x R2 F R F' R U2 r' U r U2");
+                break;
+            case "Jb":
+                updateThird(state.alignment(1, 3));
+                updateThird("R U R' F' R U R' U' R' F R2 U' R'");
+                break;
+            case "Ra":
+                updateThird(state.alignment(2, 3));
+                updateThird("R U' R' U' R U R D R' U' R D' R' U2 R'");
+                break;
+            case "Rb":
+                updateThird(state.alignment(2, 3));
+                updateThird("R2 F R U R U' R' F' R U2 R' U2 R");
+                break;
+            case "T":
+                updateThird(state.alignment(2, 3));
+                updateThird("R U R' U' R' F R2 U' R' U' R U R' F'");
+                break;
+            case "E":
+                if(!compareCells(4, 1, 3, 2)) {
+                    updateThird("U");
+                }
+                updateThird("x' R U' R' D R U R' D' R U R' D R U' R' D'");
+                break;
+            case "Na":
+                updateThird("R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'");
+                break;
+            case "Nb":
+                updateThird("R' U R U' R' F' U' F R U R' F R' F' R U' R");
+                break;
+            case "V":
+                updateThird(state.alignment(3, 0));
+                updateThird("R' U R' U' y R' F' R2 U' R' U R' F R F");
+                break;
+            case "Y":
+                updateThird(state.alignment(3, 0));
+                updateThird("F R U' R' U' R U R' F' R U R' U' R' F R F'");
+                break;
+            case "HZ":
+                if(compareCells(1, 1, 3, 0)) {
+                    updateThird("M2 U M2 U2 M2 U M2");
+                } else if(compareCells(1, 1, 4, 0)) {
+                    updateThird("M2 U' M2 U' M' U2 M2 U2 M'");
+                } else {
+                    updateThird("U' M2 U' M2 U' M' U2 M2 U2 M'");
+                } break;
+            case "U":
+                updateThird(state.alignment(1, 2));
+                if(compareCells(1, 1, 2, 0)) {
+                    updateThird("M2 U M U2 M' U M2");
+                } else {
+                    updateThird("M2 U' M U2 M' U' M2");
+                } break;
+            case "skip": break;
+            default: System.out.println("pll error.");
+        }
+    }
+
+    
+    /**
+     * Aligns the last face.
+     */
+    @Override
+    public void alignment() {
+        if(compareCells(1, 1, 2, 4)) {
+            updateThird("U'");
+        } else if(compareCells(1, 1, 3, 4)) {
+            updateThird("U2");
+        } else if(compareCells(1, 1, 4, 4)) {
+            updateThird("U");
+        } else if(compareCells(0, 1, 2, 4)) {
+            updateThird("B'");
+        } else if(compareCells(0, 1, 4, 4)) {
+            updateThird("B");
+        } else if(compareCells(0, 1, 5, 4)) {
+            updateThird("B2");
+        } else if(compareCells(0, 7, 2, 4)) {
+            updateThird("F");
+        } else if(compareCells(0, 7, 4, 4)) {
+            updateThird("F'");
+        } else if(compareCells(0, 7, 5, 4)) {
+            updateThird("F2");
+        }
     }
 }

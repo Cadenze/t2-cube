@@ -25,7 +25,7 @@ We aim to be able to compare and contrast the common speedcubing methods not onl
     - Deduction Factor
 * ~~Emulation~~
 * ~~Solve~~
-    - CFOP
+    - ~~CFOP~~
     - Roux
     - ZZ(?)
 * ~~Mass solve~~
