@@ -36,6 +36,7 @@ public class CFOP extends Solve {
         f2l();
         oll();
         pll();
+        look += 7;
         alignment();
     }
 

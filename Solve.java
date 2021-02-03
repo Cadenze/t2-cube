@@ -1,9 +1,21 @@
+import java.util.Arrays;
+
 public class Solve extends RubiksCube {
+
+    /* Variables for storing conventional metrics */
     private int qtm;
     private int htm;
     private int stm;
+
+    /* Variables for storing moves in the first and second layers. */
     private String movesFirst;
     private String movesSecond;
+
+    /* Variables for Adjustment Factor */
+    private int df; /* deduction factor from triggers */
+    private int regrip; /* number of regrips in the middle of algorithm */
+    protected int look; /* number of look and find algorithms */
+    private int rotation; /* number of cube rotations in the middle of algorithm */
 
     /**
      * Initializes a solved cube. (No work done)
@@ -43,6 +55,10 @@ public class Solve extends RubiksCube {
         stm = 0;
         movesFirst = "";
         movesSecond = "";
+        df = 0;
+        regrip = 0;
+        look = 0;
+        rotation = 0;
     }
 
     /**
@@ -63,6 +79,7 @@ public class Solve extends RubiksCube {
      * Creates a white cross.
      */
     public void cross() {
+        look++;
         crossRed();
         crossBlue();
         crossOrange();
@@ -409,6 +426,7 @@ public class Solve extends RubiksCube {
      * @param iteration Number of corners inserted before this
      */
     private void cornerInsert(Corner cubelet, int iteration) {
+        look++;
         int position = findCorner(cubelet);
         int spin = getSpin(position);
         final String error = "corner " + iteration + " error.";
@@ -520,6 +538,7 @@ public class Solve extends RubiksCube {
      * @param natural Natural parity of face; true for red/orange, false for blue/green
      */
     private void edgeInsert(Edge cubelet, boolean natural) {
+        look++;
         final String error = "second layer error.";
         int position = findEdge(cubelet);
         if(getParity(position) == natural) {
@@ -590,6 +609,7 @@ public class Solve extends RubiksCube {
         if(parity[0] && parity[1] && parity[2]) {
             return;
         }
+        look++;
         if(parity[0]) {
             if(parity[1]) { updateThird("U2 F U R U' R' F'"); }
             else if(parity[2]) { updateThird("U F R U R' U' F'"); }
@@ -622,6 +642,8 @@ public class Solve extends RubiksCube {
         else if(zeroes == 2) { spinToFind = 1; }
         else { return; }
 
+        look++;
+
         if(spin[3] == spinToFind) { updateThird(sune); }
         else if(spin[0] == spinToFind) { updateThird("U " + sune); }
         else if(spin[2] == spinToFind) { updateThird("U' " + sune); }
@@ -642,9 +664,11 @@ public class Solve extends RubiksCube {
                 break;
             }
         }
+        look++;
         switch(same) {
             case 0:
                 if(compareCells(2, 0, 2)) {
+                    look--;
                     return;
                 } else {
                     updateThird("U2 " + alg);
@@ -675,10 +699,11 @@ public class Solve extends RubiksCube {
                 break;
             }
         }
-
+        look++;
         switch(same) {
             case 0:
                 if(compareCells(2, 0, 1)) {
+                    look--;
                     return;
                 } else {
                     updateThird("U2");
@@ -732,6 +757,10 @@ public class Solve extends RubiksCube {
         qtm += countQTM(moves);
         htm += countHTM(moves);
         stm += countSTM(moves);
+        AF moveset = new AF(moves);
+        df += moveset.calculateDF();
+        regrip += moveset.calculateRegrip();
+        rotation += moveset.calculateRotation();
     }
 
     /**
@@ -786,6 +815,298 @@ public class Solve extends RubiksCube {
             }
         }
         return true;
+    }
+
+    /**
+     * An object to analyze the Adjustment Factor.
+     */
+    class AF {
+        private String[] move;
+        private int[] flicks;
+        private int[] left;
+        private int[] right;
+
+        AF(String sequence) {
+            this(sequence.split(" "));
+        }
+
+        AF(String[] cells) {
+            move = new String[cells.length];
+            flicks = new int[cells.length];
+            for(int i = 0; i < cells.length; i++) {
+                if(cells[i].length() == 1) {
+                    move[i] = cells[i];
+                    flicks[i] = 1;
+                } else if(cells[i].substring(1).equals("2")) {
+                    move[i] = cells[i].substring(0, 1);
+                    flicks[i] = 2;
+                } else {
+                    move[i] = cells[i].substring(0, 1);
+                    flicks[i] = -1;
+                }
+            }
+            left = new int[0];
+            right = new int[0];
+        }
+
+        int calculateDF() {
+            if(move.length < 4) {
+                return 0;
+            }
+            int factor = 0;
+            int counter = 3;
+            while(counter < move.length) {
+                String prev2 = move[counter-3] + move[counter-2];
+                String current = move[counter-1] + move[counter];
+                if(current.equals(prev2)) {
+                    counter += 2;
+                    factor++;
+                } else {
+                    counter++;
+                }
+            }
+            return factor;
+        }
+
+        int calculateRotation() {
+            if(move.length < 4) {
+                return 0;
+            }
+            int rota = 0;
+            for(int i = 1; i < move.length - 1; i++) {
+                if(move[i].equals("x") || move[i].equals("y") || move[i].equals("z")) {
+                    rota++;
+                }
+            }
+            return rota;
+        }
+
+        int calculateRegrip() {
+            int rg = 0;
+            boolean entanglement = false;
+            for(int i = 0; i < move.length; i++) {
+                switch(move[i] + flicks[i]) {
+                    case "L1": case "L2": case "L-1": case "l1": case "l2": case "l-1":
+                        if(moveLeft(flicks[i]) == 1) {
+                            if(entanglement) { entanglement = false; }
+                            else { rg++; }
+                        } break;
+                    case "R1": case "R2": case "R-1": case "r1": case "r2": case "r-1":
+                        if(moveRight(flicks[i]) == 1) {
+                            if(entanglement) { entanglement = false; }
+                            else { rg++; }
+                        } break;
+                    case "F1": case "B-1": case "S1": case "f1": case "b-1":
+                        if(checkRight(-1)) {
+                            right = new int[]{ -1 };
+                        } else if(checkLeft(1)) {
+                            left = new int[]{ 1 };
+                        } else {
+                            right = new int[]{ -1 };
+                            rg++;
+                        } break;
+                    case "F-1": case "B1": case "S-1": case "f-1": case "b1":
+                        if(checkLeft(-1)) {
+                            left = new int[]{ -1 };
+                        } else if(checkRight(1)) {
+                            right = new int[]{ 1 };
+                        } else {
+                            left = new int[]{ -1 };
+                            rg++;
+                        } break;
+                    case "F2": case "B2": case "S2": case "f2": case "b2":
+                        if(left.length == 0 && right.length == 0) {
+                            entanglement = true;
+                            left = new int[]{ -1 };
+                            right = new int[]{ -1 };
+                        } else if(checkLeft(-1) && !checkLeft(1)) {
+                            left = new int[]{ -1 };
+                        } else if(checkRight(-1) && !checkRight(1)) {
+                            right = new int[]{ -1 };
+                        } else if(checkLeft(1) && !checkLeft(-1)) {
+                            left = new int[]{ 1 }; 
+                        } else if(checkRight(1) && !checkRight(-1)) {
+                            right = new int[]{ 1 };
+                        } else if(!checkRight(1) && !checkRight(-1) && !checkLeft(1) && !checkLeft(-1)) {
+                            entanglement = true;
+                            left = new int[]{ -1 };
+                            right = new int[]{ -1 };
+                            rg++;
+                        } break;
+                    case "U1":
+                        if(checkRight(0) && checkRight(1) && right.length == 0) {
+                            right = new int[]{ 0 };
+                        } else if(checkRight(0) && !checkRight(1)) {
+                            right = new int[]{ 0 };
+                        } else if(checkRight(1) && !checkRight(0)) {
+                            right = new int[]{ 1 };
+                        } else if(!checkRight(0) && !checkRight(1)) {
+                            right = new int[]{ 0 };
+                            rg++;
+                        } break;
+                    case "U-1":
+                        if(checkLeft(0) && checkLeft(1) && left.length == 0) {
+                            left = new int[]{ 0 };
+                        } else if(checkLeft(0) && !checkLeft(1)) {
+                            left = new int[]{ 0 };
+                        } else if(checkLeft(1) && !checkLeft(0)) {
+                            left = new int[]{ 1 };
+                        } else if(!checkLeft(0) && !checkLeft(1)) {
+                            left = new int[]{ 0 };
+                            rg++;
+                        } break;
+                    case "D-1": case "E-1": case "u1": case "d-1":
+                        if(!checkRight(0)) {
+                            rg++;
+                        }
+                        right = new int[]{ 0 };
+                        break;
+                    case "D1": case "E1": case "u-1": case "d1":
+                        if(!checkLeft(0)) {
+                            rg++;
+                        }
+                        left = new int[]{ 0 };
+                        break;
+                    case "U2": case "D2": case "E2": case "u2": case "d2":
+                        if(checkLeft(0)) {
+                            left = new int[]{ 0 };
+                        } else if(checkRight(0)) {
+                            right = new int[]{ 0 };
+                        } else {
+                            entanglement = true;
+                            left = new int[]{ 0 };
+                            right = new int[]{ 0 };
+                            rg++;
+                        } break;
+                    case "M1": case "M2": case "M-1":
+                        if(!checkLeft(8) && !checkRight(8)) {
+                            entanglement = true;
+                            left = new int[]{ 8 };
+                            right = new int[]{ 8 };
+                            rg++;
+                        } break;
+                    case "x1": case "x2": case "x-1":
+                    case "y1": case "y2": case "y-1":
+                    case "z1": case "z2": case "z-1":
+                        left = new int[0];
+                        right = new int[0];
+                        break;
+                    default: System.out.println("regrip calc error.");
+                }
+            }
+            return rg;
+        }
+
+        boolean checkLeft(int position) {
+            if(left.length == 0) {
+                return true;
+            } else if(left.length == 1) {
+                return left[0] == position;
+            } else {
+                return left[0] == position || left[1] == position;
+            }
+        }
+
+        boolean checkRight(int position) {
+            if(right.length == 0) {
+                return true;
+            } else if(right.length == 1) {
+                return right[0] == position;
+            } else {
+                return right[0] == position || right[1] == position;
+            }
+        }
+
+        /**
+         * Returns the regrips needed to perform the next move.
+         * @param move +1 for elevation, -1 for depression, and 2 for sublimation
+         * @return 1 if regrip; 0 if no
+         */
+        int moveLeft(int move) {
+            if(left.length == 0) {
+                left = assign(move);
+            } else if(left.length == 1) {
+                if(left[0] == 8) {
+                    left = assign(move);
+                    return 1;
+                }
+                left = change(left[0], move);
+                if(left.length == 2) {
+                    return 1;
+                }
+            } else {
+                left = superposition(left, move);
+            }
+            return 0;
+        }
+
+        int moveRight(int move) {
+            if(right.length == 0) {
+                right = assign(move);
+            } else if(right.length == 1) {
+                if(right[0] == 8) {
+                    right = assign(move);
+                    return 1;
+                }
+                right = change(right[0], move);
+                if(right.length == 2) {
+                    return 1;
+                }
+            } else {
+                right = superposition(right, move);
+            }
+            return 0;
+        }
+
+        int[] assign(int move) {
+            switch(move) {
+                case 1: return new int[]{ 0, 1 };
+                case -1: return new int[]{ -1, 0 };
+                case 2: return new int[]{ -1, 1 };
+                default: System.out.println("assign error.");
+            }
+            return new int[0];
+        }
+
+        int[] change(int initial, int move) {
+            if(move == 2) {
+                if(initial == 0) {
+                    return assign(2);
+                } else {
+                    return new int[]{ -initial };
+                }
+            } else {
+                int answer = initial + move;
+                if(answer == -2 || answer == 2) {
+                    return assign(move);
+                }
+                return new int[]{ answer };
+            }
+        }
+
+        int[] superposition(int[] initial, int move) {
+            if(move == 2) {
+                if(initial[0] == -1 && initial[1] == 1) {
+                    return initial;
+                } else if(initial[0] == -1) {
+                    return change(initial[0], move);
+                } else if(initial[1] == 1) {
+                    return change(initial[1], move);
+                } else {
+                    return assign(2);
+                }
+            } else {
+                initial[0] += move;
+                initial[1] += move;
+                if(initial[1] == 2) {
+                    return new int[]{ initial[0] };
+                } else if(initial[0] == -2) {
+                    return new int[]{ initial[1] };
+                } else {
+                    return Arrays.copyOf(initial, 2);
+                }
+            }
+        }
     }
 
     /**
@@ -898,5 +1219,21 @@ public class Solve extends RubiksCube {
      */
     public int getSTM() {
         return stm;
+    }
+
+    public int getAF() {
+        return look * 2 + rotation * 2 + regrip - df;
+    }
+
+    public int getAQTM() {
+        return qtm + getAF();
+    }
+
+    public int getAHTM() {
+        return htm + getAF();
+    }
+
+    public int getASTM() {
+        return stm + getAF();
     }
 }

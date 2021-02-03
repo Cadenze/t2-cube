@@ -13,9 +13,11 @@ public class MultipleSolves {
         System.out.print("Input scramble or text file: ");
         String input = kb.nextLine();
         if (input.contains(".")) {
+            System.out.print("Method: ");
+            String method = kb.nextLine();
             System.out.print("Output file name: ");
             String output = kb.nextLine();
-            stats(input, output);
+            stats(input, output, method);
         } else {
             scramble(input);
         }
@@ -37,8 +39,11 @@ public class MultipleSolves {
     /**
      * Retrieves the statistics on multiple scrambles.
      * @param file .txt files containing a scramble per line
+     * @param output .csv file containing a solve per line
+     * @param type Method to solve with
      */
-    public static void stats(String file, String output) throws FileNotFoundException {
+    public static void stats(String file, String output, String type) throws FileNotFoundException {
+        final String ERROR = "An error occured.";
         try {
             File csv = new File(output);
             if (!csv.createNewFile()) {
@@ -46,28 +51,57 @@ public class MultipleSolves {
                 return;
             }
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.out.println(ERROR);
             e.printStackTrace();
             return;
         }
 
-        try (
-            Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
-            BufferedWriter pen = new BufferedWriter(new FileWriter(output));
-        ) {
-            while(explorer.hasNextLine()) {
-                String sequence = explorer.nextLine();
-                CFOP cube = new CFOP(sequence);
-                boolean solved = cube.checkSolved();
-                int qtm = cube.getQTM();
-                int htm = cube.getHTM();
-                int stm = cube.getSTM();
-                pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm);
-                pen.newLine();
-            }
-        } catch(IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        switch(type) {
+            case "Beginners": case "Beginner": case "beginners": case "beginner":
+            try (
+                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
+                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
+            ) {
+                while(explorer.hasNextLine()) {
+                    String sequence = explorer.nextLine();
+                    Solve cube = new Solve(sequence);
+                    boolean solved = cube.checkSolved();
+                    int qtm = cube.getQTM();
+                    int htm = cube.getHTM();
+                    int stm = cube.getSTM();
+                    int ahtm = cube.getAHTM();
+                    int astm = cube.getASTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    pen.newLine();
+                }
+            } catch(IOException e) {
+                System.out.println(ERROR);
+                e.printStackTrace();
+            } break;
+
+            case "CFOP": case "cfop": case "Fridrich": case "fridrich":
+            try (
+                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
+                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
+            ) {
+                while(explorer.hasNextLine()) {
+                    String sequence = explorer.nextLine();
+                    CFOP cube = new CFOP(sequence);
+                    boolean solved = cube.checkSolved();
+                    int qtm = cube.getQTM();
+                    int htm = cube.getHTM();
+                    int stm = cube.getSTM();
+                    int ahtm = cube.getAHTM();
+                    int astm = cube.getASTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    pen.newLine();
+                }
+            } catch(IOException e) {
+                System.out.println(ERROR);
+                e.printStackTrace();
+            } break;
+
+            default: System.out.println("Method currently does not exist.");
         }
     }
 }
