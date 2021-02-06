@@ -89,7 +89,7 @@ public class Solve extends RubiksCube {
     /**
      * Inserts the White-Red edge.
      */
-    private void crossRed() {
+    protected void crossRed() {
         int position = findEdge(Edge.WHITE_RED);
         if(getParity(position)) {
             switch(position) {
@@ -261,7 +261,7 @@ public class Solve extends RubiksCube {
     /**
      * Inserts the White-Orange edge.
      */
-    private void crossOrange() {
+    protected void crossOrange() {
         int position = findEdge(Edge.WHITE_ORANGE);
         if(getParity(position)) {
             switch(position) {               

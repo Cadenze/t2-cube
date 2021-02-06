@@ -72,6 +72,8 @@ public class CFOP extends Solve {
         int extractionCode() {
             int code = 0;
             if(edge < 4) { code += 10; }
+            else if(edge == 8) { code += 80; }
+            else if(edge == 10) { code += 100; }
             else if(edge > 4) { code += 20; }
             if(corner < 4) { code++; }
             else if(corner > 4) { code += 2; }
@@ -264,6 +266,9 @@ public class CFOP extends Solve {
                 updateSecond(pair.alignCorner(1));
                 updateSecond(pair.extraction(pair.getEdgePosition()));
                 break;
+            case 80: case 81: case 82: case 100: case 101: case 102:
+                updateSecond("M2");
+                break;
             default: System.out.println(ERROR); return;
         }
 
@@ -367,7 +372,7 @@ public class CFOP extends Solve {
         private int trues;
         private int zeroes;
         private int[] pos0;
-        private int[] posT;
+        int[] posT;
 
         /**
          * Stores the variables for identifying the OLL case.
@@ -635,12 +640,23 @@ public class CFOP extends Solve {
          * @return Moves
          */
         String alignment(boolean parity, int secondPos) {
-            int from = 0;
-            if(posT[1] - posT[0] != 3) {
-                from = posT[1];
+            if(parity) {
+                int from = 0;
+                if(posT[1] - posT[0] != 3) {
+                    from = posT[1];
+                }
+                int moves = (from + 4 - secondPos) % 4;
+                return alignMoves(moves);
+            } else {
+                int from = 0;
+                for(int i = 0; i < 4; i++) {
+                    if(!this.parity[i]) {
+                        from = i;
+                    }
+                }
+                int moves = (from + 4 - secondPos) % 4;
+                return alignMoves(moves);
             }
-            int moves = (from + 4 - secondPos) % 4;
-            return alignMoves(moves);
         }
 
         /**

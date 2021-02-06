@@ -21,8 +21,8 @@ We aim to be able to compare and contrast the common speedcubing methods not onl
 
 * Metric
     - ~~QTM, HTM, STM~~
-    - Empirical
-    - Deduction Factor
+    - ~~Empirical~~
+    - ~~Deduction Factor~~
 * ~~Emulation~~
 * ~~Solve~~
     - ~~CFOP~~
