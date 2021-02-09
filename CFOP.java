@@ -72,8 +72,7 @@ public class CFOP extends Solve {
         int extractionCode() {
             int code = 0;
             if(edge < 4) { code += 10; }
-            else if(edge == 8) { code += 80; }
-            else if(edge == 10) { code += 100; }
+            else if(edge > 7) { code += 10 * edge; }
             else if(edge > 4) { code += 20; }
             if(corner < 4) { code++; }
             else if(corner > 4) { code += 2; }
@@ -268,6 +267,9 @@ public class CFOP extends Solve {
                 break;
             case 80: case 81: case 82: case 100: case 101: case 102:
                 updateSecond("M2");
+                break;
+            case 90: case 91: case 92: case 110: case 111: case 112:
+                updateSecond("S2");
                 break;
             default: System.out.println(ERROR); return;
         }

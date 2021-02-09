@@ -264,7 +264,10 @@ public class Solve extends RubiksCube {
     protected void crossOrange() {
         int position = findEdge(Edge.WHITE_ORANGE);
         if(getParity(position)) {
-            switch(position) {               
+            switch(position) {
+                case(1):
+                    updateFirst("R2 D B2");
+                    break;
                 case(2):
                     break;
                 case(3):
@@ -299,6 +302,9 @@ public class Solve extends RubiksCube {
             }
         } else {
             switch(position) {
+                case(1):
+                    updateFirst("R B");
+                    break;
                 case(2):
                     updateFirst("B U' L U");
                     break;

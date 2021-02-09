@@ -101,6 +101,28 @@ public class MultipleSolves {
                 e.printStackTrace();
             } break;
 
+            case "Roux": case "roux":
+            try (
+                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
+                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
+            ) {
+                while(explorer.hasNextLine()) {
+                    String sequence = explorer.nextLine();
+                    Roux cube = new Roux(sequence);
+                    boolean solved = cube.checkSolved();
+                    int qtm = cube.getQTM();
+                    int htm = cube.getHTM();
+                    int stm = cube.getSTM();
+                    int ahtm = cube.getAHTM();
+                    int astm = cube.getASTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    pen.newLine();
+                }
+            } catch(IOException e) {
+                System.out.println(ERROR);
+                e.printStackTrace();
+            } break;
+
             default: System.out.println("Method currently does not exist.");
         }
     }
