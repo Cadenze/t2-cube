@@ -108,7 +108,7 @@ public class MultipleSolves {
             ) {
                 while(explorer.hasNextLine()) {
                     String sequence = explorer.nextLine();
-                    Roux cube = new Roux(sequence);
+                    AdvRoux cube = new AdvRoux(sequence);
                     boolean solved = cube.checkSolved();
                     int qtm = cube.getQTM();
                     int htm = cube.getHTM();

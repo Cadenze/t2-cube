@@ -1,10 +1,5 @@
 public class Roux extends CFOP {
     
-    public static void main(String[] args) {
-        Roux gan = new Roux("R' B2 F U' F B R2 B' D2 B R2 U2 L' F' U2 F2 R B' L");
-        gan.printCube();
-    }
-
     public Roux() {
         super();
     }
@@ -25,6 +20,7 @@ public class Roux extends CFOP {
     }
 
     public void f2b() {
+        look += 2;
         crossRed();
         crossOrange(); /* yellow on top, red in front */
         f2l(); /* yellow on top, blue in front */
@@ -36,6 +32,7 @@ public class Roux extends CFOP {
     }
 
     public void lse() {
+        look += 3;
         eo();
         lr();
         mperm();
@@ -252,12 +249,15 @@ public class Roux extends CFOP {
     }
 
     protected void alignM() {
+        look++;
         if(compareCells(0, 0, 5, 4)) {
             updateThird("M2");
         } else if(compareCells(0, 0, 1, 4)) {
             updateThird("M'");
         } else if(compareCells(0, 0, 3, 4)) {
             updateThird("M");
+        } else {
+            look--;
         }
     }
 }
