@@ -22,7 +22,8 @@ public class Roux extends CFOP {
     public void f2b() {
         look += 2;
         crossRed();
-        crossOrange(); /* yellow on top, red in front */
+        crossOrange(); 
+        updateFirst("z2"); /* yellow on top, red in front */
         f2l(); /* yellow on top, blue in front */
     }
 
@@ -189,7 +190,7 @@ public class Roux extends CFOP {
         }
     }
 
-    private int findParity(boolean parity) {
+    protected int findParity(boolean parity) {
         for(int i = 0; i < 4; i++) {
             if(getParity(i) == parity) {
                 return i;
@@ -198,7 +199,7 @@ public class Roux extends CFOP {
         return -1;
     }
 
-    private void mperm() {
+    protected void mperm() {
         boolean[] correct = {
             getEdge(0).colour(0).equals(getCentre(0)) && getEdge(0).colour(1).equals(getCentre(1)),
             getEdge(2).colour(0).equals(getCentre(0)) && getEdge(2).colour(1).equals(getCentre(3)),
