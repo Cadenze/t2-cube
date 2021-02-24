@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CFOP extends Solve {
 
@@ -38,6 +40,264 @@ public class CFOP extends Solve {
         pll();
         look += 7;
         alignment();
+    }
+
+    @Override
+    public void cross() {
+        new Cross();
+    }
+
+    class Cross {
+        private int[] condition;
+        private Edge anchor;
+        private final Edge[] sequence = { Edge.WHITE_RED, Edge.WHITE_BLUE, Edge.WHITE_ORANGE, Edge.WHITE_GREEN };
+
+        Cross() {
+            condition = new int[4];
+            anchor();
+            int counter = searchSequence(anchor);
+            counter++;
+            counter %= 4;
+            crossBlue(sequence[counter]);
+            counter++;
+            counter %= 4;
+            crossOrange(sequence[counter]);
+            counter++;
+            counter %= 4;
+            crossGreen(sequence[counter]);
+
+            int position = findEdge(Edge.WHITE_RED);
+            alignU(position);
+            updateFirst("z2");
+        }
+
+        void anchor() {
+            List<Edge> potential = new ArrayList<>(); /* number of potential anchors */
+            for(Edge edge : sequence) {
+                int position = findEdge(edge);
+                if(position < 4 && getParity(position)) { /* in bottom layer & true parity */
+                    potential.add(edge);
+                }
+            }
+
+            if(potential.isEmpty()) {
+                crossRed();
+                anchor = Edge.WHITE_RED;
+            } else if(potential.size() == 1) {
+                anchor = potential.get(0);
+            } else {
+                anchor = potential.get(0);
+            }
+
+            int position = findEdge(anchor);
+            alignU(position);
+        }
+
+        void identify() {
+            int lowest = 4;
+            Edge target = null;
+            for(int i = 0; i < 4; i++) {
+                condition[i] = getCondition(sequence[i]);
+                if(condition[i] < lowest && condition[i] != 0) {
+                    lowest = condition[i];
+                    target = sequence[i];
+                }
+            }
+
+            if(lowest == 5) {
+                return;
+            } else if(lowest == 1) {
+                insertGood(target);
+            } else if(lowest == 2) {
+                insertStillGood(target);
+            } else {
+                removeBad(target);
+            }
+            identify();
+        }
+
+        void alignCross() {
+            int current = findCentre("r");
+            switch(current) {
+                case 1: break;
+                case 2: updateFirst("y"); break;
+                case 3: updateFirst("y2"); break;
+                case 4: updateFirst("y'"); break;
+                default: System.out.println("align cross error.");
+            }
+            current = findEdge(Edge.WHITE_RED, 8, 12);
+            switch(current) {
+                case 8: break;
+                case 9: updateFirst("D'"); break;
+                case 10: updateFirst("D2"); break;
+                case 11: updateFirst("D"); break;
+                default: System.out.println("align cross error.");
+            }
+        }
+
+        void insertGood(Edge e) {
+            int position = findEdge(e, 4, 8);
+            alignE(position - 5);
+            int carryDes = getParity(5) ? 1 : 0;
+
+            int carryFrom = -1;
+            for(int i = 0; i < 4; i++) {
+                if(inSequence(getEdge(i)) && !getParity(i)) {
+                    carryFrom = i;
+                    break;
+                }
+            }
+
+            if(carryFrom == -1) {
+                for(int i = 0; i < 4; i++) {
+                    if(inSequence(getEdge(i))) {
+                        carryFrom = i;
+                        break;
+                    }
+                }
+            }
+
+            if(carryFrom != -1) {
+                alignU((carryFrom + 4 - carryDes) % 4);
+            }
+
+            int diffFromAnchor = (searchSequence(e) + 4 - searchSequence(anchor)) % 4;
+            int finalAnchorPos = 8 + carryDes + 4 - diffFromAnchor;
+            alignD((findEdge(anchor, 8 , 12) + 8 - finalAnchorPos) % 4);
+
+            if(carryDes == 1) {
+                updateFirst("R'");
+            } else {
+                updateFirst("F");
+            }
+        }
+
+        void insertStillGood(Edge e) {
+            int position = findEdge(e, 0, 4);
+            int diffFromAnchor = (searchSequence(e) + 4 - searchSequence(anchor)) % 4;
+            int finalPos = (findEdge(anchor, 8, 12) - 8 + diffFromAnchor) % 4;
+            alignU((position - finalPos + 4) % 4);
+            position = findEdge(e, 0, 4);
+            switch(position) {
+                case 0: updateFirst("F2"); break;
+                case 1: updateFirst("R2"); break;
+                case 2: updateFirst("B2"); break;
+                case 3: updateFirst("L2"); break;
+                default: System.out.println("cross insert still good error.");
+            }
+        }
+
+        void removeBad(Edge e) {
+            int position = findEdge(e);
+            if(position < 4 && inSequence(getEdge(position + 8)) && getParity(position + 8)) {
+                /* you fucked up */
+                /* somehow U-slice moves */
+                int positionDes = -1;
+                for(int i = 0; i < 4; i++) {
+                    if(!(inSequence(getEdge(i + 8)) && getParity(i + 8))) {
+                        positionDes = i;
+                        break;
+                    }
+                }
+                alignU((position + 4 - positionDes) % 4);
+                position = positionDes;
+            }
+
+            switch(position) {
+                case 0: case 8: updateFirst("F"); break;
+                case 1: case 9: updateFirst("R"); break;
+                case 2: case 10: updateFirst("B"); break;
+                case 3: case 11: updateFirst("L"); break;
+                default: System.out.println("cross remove bad error.");
+            }
+        }
+
+        boolean inSequence(Edge e) {
+            for(int i = 0; i < 4; i++) {
+                if(e == sequence[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void alignE(int diff) {
+            switch(diff) {
+                case 0: break;
+                case 1: updateFirst("u"); break;
+                case 2: updateFirst("u2"); break;
+                case 3: updateFirst("u'"); break;
+                default: System.out.println("cross alignE error.");
+            }
+        }
+
+        void alignU(int diff) {
+            switch(diff) {
+                case 0: break;
+                case 1: updateFirst("U"); break;
+                case 2: updateFirst("U2"); break;
+                case 3: updateFirst("U'"); break;
+                default: System.out.println("cross alignU error.");
+            }
+        }
+
+        void alignD(int diff) {
+            switch(diff) {
+                case 0: break;
+                case 1: updateFirst("D'"); break;
+                case 2: updateFirst("D2"); break;
+                case 3: updateFirst("D"); break;
+                default: System.out.println("cross alignD error.");
+            }
+        }
+
+        int getCondition(Edge e) {
+            int position = findEdge(e);
+            if(position < 4) {
+                if(getParity(position)) {
+                    return 2;
+                } else {
+                    return 3;
+                }
+            } else if(position < 8) {
+                return 1;
+            } else if(getParity(position)) {
+                int actualDiff = (position + 4 - findEdge(anchor)) % 4;
+                int theoretical = (searchSequence(e) + 4 - searchSequence(anchor)) % 4;
+                if(actualDiff == theoretical) {
+                    return 0;
+                }
+            }
+            return 4;
+        }
+
+        int searchSequence(Edge e) {
+            for(int i = 0; i < 4; i++) {
+                if(sequence[i] == e) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        int countZero(Edge e) {
+            int counter = 0;
+            final int base = findEdge(e, 8, 12);
+            int positionInSequence = searchSequence(e);
+            
+            for(int i = 1; i < 4; i++) {
+                int position = base + i;
+                if(position > 11) {
+                    position -= 4;
+                }
+                
+                if(getEdge(position) == sequence[(positionInSequence + i) % 4] && getParity(position)) {
+                    counter++;
+                }
+            }
+
+            return counter;
+        }
     }
 
     /**
@@ -176,7 +436,6 @@ public class CFOP extends Solve {
      * Completes the first two layers.
      */
     public void f2l() {
-        updateFirst("z2");
         f2lIdentify(Corner.WHITE_RED_GREEN, Edge.RED_GREEN, true, 0);
         updateFirst("y"); 
         f2lIdentify(Corner.WHITE_GREEN_ORANGE, Edge.ORANGE_GREEN, false, 1);

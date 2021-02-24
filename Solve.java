@@ -86,11 +86,15 @@ public class Solve extends RubiksCube {
         crossGreen();
     }
 
+    protected void crossRed() {
+        crossRed(Edge.WHITE_RED);
+    }
+
     /**
      * Inserts the White-Red edge.
      */
-    protected void crossRed() {
-        int position = findEdge(Edge.WHITE_RED);
+    protected void crossRed(Edge e) {
+        int position = findEdge(e);
         if(getParity(position)) {
             switch(position) {
                 case(0):
@@ -175,11 +179,15 @@ public class Solve extends RubiksCube {
         }
     }
     
+    protected void crossBlue() {
+        crossBlue(Edge.WHITE_BLUE);
+    }
+
     /**
      * Inserts the White-Blue edge.
      */
-    private void crossBlue() {
-        int position = findEdge(Edge.WHITE_BLUE);
+    void crossBlue(Edge e) {
+        int position = findEdge(e);
         if(getParity(position)) {
             switch(position) {                
                 case(1):
@@ -258,11 +266,14 @@ public class Solve extends RubiksCube {
         }
     }
 
+    protected void crossOrange() {
+        crossOrange(Edge.WHITE_ORANGE);
+    }
     /**
      * Inserts the White-Orange edge.
      */
-    protected void crossOrange() {
-        int position = findEdge(Edge.WHITE_ORANGE);
+    protected void crossOrange(Edge e) {
+        int position = findEdge(e);
         if(getParity(position)) {
             switch(position) {
                 case(1):
@@ -341,11 +352,15 @@ public class Solve extends RubiksCube {
         }
     }
 
+    protected void crossGreen() {
+        crossGreen(Edge.WHITE_GREEN);
+    }
+
     /**
      * Inserts the White-Green edge.
      */
-    private void crossGreen() {
-        int position = findEdge(Edge.WHITE_GREEN);
+    void crossGreen(Edge e) {
+        int position = findEdge(e);
         if(getParity(position)) {
             switch(position) {               
                 case(3):
