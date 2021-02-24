@@ -19,14 +19,14 @@ We aim to be able to compare and contrast the common speedcubing methods not onl
 
 ## Current progress TODO list
 
-* Metric
+* ~~Metric~~
     - ~~QTM, HTM, STM~~
     - ~~Empirical~~
     - ~~Deduction Factor~~
 * ~~Emulation~~
 * ~~Solve~~
     - ~~CFOP~~
-    - Roux
+    - ~~Roux~~
     - ZZ(?)
 * ~~Mass solve~~
 * Statistics
