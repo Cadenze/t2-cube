@@ -1257,4 +1257,20 @@ public class Solve extends RubiksCube {
     public int getASTM() {
         return stm + getAF();
     }
+    
+    public int getNR() {
+        return look + rotation * 2 - df;
+    }
+
+    public int getNRQTM() {
+        return qtm + getNR();
+    }
+
+    public int getNRHTM() {
+        return htm + getNR();
+    }
+
+    public int getNRSTM() {
+        return stm + getNR();
+    }
 }

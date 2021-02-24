@@ -74,7 +74,9 @@ public class MultipleSolves {
                     int stm = cube.getSTM();
                     int ahtm = cube.getAHTM();
                     int astm = cube.getASTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    int nrhtm = cube.getNRHTM();
+                    int nrstm = cube.getNRSTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
@@ -98,7 +100,9 @@ public class MultipleSolves {
                     int stm = cube.getSTM();
                     int ahtm = cube.getAHTM();
                     int astm = cube.getASTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    int nrhtm = cube.getNRHTM();
+                    int nrstm = cube.getNRSTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
@@ -122,7 +126,9 @@ public class MultipleSolves {
                     int stm = cube.getSTM();
                     int ahtm = cube.getAHTM();
                     int astm = cube.getASTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm);
+                    int nrhtm = cube.getNRHTM();
+                    int nrstm = cube.getNRSTM();
+                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
