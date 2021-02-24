@@ -56,12 +56,15 @@ public class MultipleSolves {
             return;
         }
 
+        final String header = "Scramble, Solved?, QTM, HTM, STM, AHTM, ASTM";
         switch(type) {
             case "Beginners": case "Beginner": case "beginners": case "beginner":
             try (
                 Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
                 BufferedWriter pen = new BufferedWriter(new FileWriter(output));
             ) {
+                pen.write(header);
+                pen.newLine();
                 while(explorer.hasNextLine()) {
                     String sequence = explorer.nextLine();
                     Solve cube = new Solve(sequence);
@@ -84,6 +87,8 @@ public class MultipleSolves {
                 Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
                 BufferedWriter pen = new BufferedWriter(new FileWriter(output));
             ) {
+                pen.write(header);
+                pen.newLine();
                 while(explorer.hasNextLine()) {
                     String sequence = explorer.nextLine();
                     CFOP cube = new CFOP(sequence);
@@ -106,6 +111,8 @@ public class MultipleSolves {
                 Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
                 BufferedWriter pen = new BufferedWriter(new FileWriter(output));
             ) {
+                pen.write(header);
+                pen.newLine();
                 while(explorer.hasNextLine()) {
                     String sequence = explorer.nextLine();
                     AdvRoux cube = new AdvRoux(sequence);
