@@ -17,6 +17,12 @@ We aim to be able to compare and contrast the common speedcubing methods not onl
     - the implementation of the aforementioned metric/factor; and lastly,
 3. Using the program, generate a statistical distribution of solve metrics and analyze it.
 
+## User's Manual
+
+Run **Scrambler.java** to generate a number of scrambles. The result should be a text file **scrambles.txt** that contains a scramble per line.
+
+Run **MultipleSolves.java** to solve all those generated scrambles. Type **scrambles.txt** in the first line, the name of a method (CFOP/Roux) in the second line, and the name of an output file of your choice (ideally in **.csv** format).
+
 ## Current progress TODO list
 
 * ~~Metric~~
