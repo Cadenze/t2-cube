@@ -56,7 +56,7 @@ public class MultipleSolves {
             return;
         }
 
-        final String header = "Scramble, Solved?, QTM, HTM, STM, AHTM, ASTM";
+        final String header = "Scramble,Solved?,QTM,HTM,STM,AHTM,ASTM,NRHTM,NRSTM";
         switch(type) {
             case "Beginners": case "Beginner": case "beginners": case "beginner":
             try (
@@ -76,7 +76,7 @@ public class MultipleSolves {
                     int astm = cube.getASTM();
                     int nrhtm = cube.getNRHTM();
                     int nrstm = cube.getNRSTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
+                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
@@ -102,7 +102,7 @@ public class MultipleSolves {
                     int astm = cube.getASTM();
                     int nrhtm = cube.getNRHTM();
                     int nrstm = cube.getNRSTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
+                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
@@ -128,7 +128,7 @@ public class MultipleSolves {
                     int astm = cube.getASTM();
                     int nrhtm = cube.getNRHTM();
                     int nrstm = cube.getNRSTM();
-                    pen.write(sequence + ", " + solved + ", " + qtm + ", " + htm + ", " + stm + ", " + ahtm + ", " + astm + ", " + nrhtm + ", " + nrstm);
+                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
                     pen.newLine();
                 }
             } catch(IOException e) {
