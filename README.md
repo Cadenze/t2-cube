@@ -23,7 +23,19 @@ Run **Scrambler.java** to generate a number of scrambles. The result should be a
 
 Run **MultipleSolves.java** to solve all those generated scrambles. Type **scrambles.txt** in the first line, the name of a method (CFOP/Roux) in the second line, and the name of an output file of your choice (ideally in **.csv** format).
 
-## Current progress TODO list
+## v2 TODO list
+
+* ~~Colour enumeration~~
+* Universal search algorithm
+* Graphical user interface
+* More solve methods
+    - ZZ (?)
+    - Winter
+* Statistics
+
+I hope by the time I have finished this, summer isn't over and I will have finished learning the basics of linear algebra.
+
+## v1 TODO list
 
 * ~~Metric~~
     - ~~QTM, HTM, STM~~
@@ -33,8 +45,8 @@ Run **MultipleSolves.java** to solve all those generated scrambles. Type **scram
 * ~~Solve~~
     - ~~CFOP~~
     - ~~Roux~~
-    - ZZ(?)
+    - ~~ZZ(?)~~
 * ~~Mass solve~~
-* Statistics
+* ~~Statistics~~
 
 When this list is entirely crossed out, I will be basically done with my first year of my undergraduate degree.

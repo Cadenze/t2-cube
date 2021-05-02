@@ -201,10 +201,10 @@ public class Roux extends CFOP {
 
     protected void mperm() {
         boolean[] correct = {
-            getEdge(0).colour(0).equals(getCentre(0)) && getEdge(0).colour(1).equals(getCentre(1)),
-            getEdge(2).colour(0).equals(getCentre(0)) && getEdge(2).colour(1).equals(getCentre(3)),
-            getEdge(10).colour(0).equals(getCentre(5)) && getEdge(10).colour(1).equals(getCentre(3)),
-            getEdge(8).colour(0).equals(getCentre(5)) && getEdge(8).colour(1).equals(getCentre(1))
+            getEdge(0).colour(0)  == getCentre(0) && getEdge(0).colour(1)  == getCentre(1),
+            getEdge(2).colour(0)  == getCentre(0) && getEdge(2).colour(1)  == getCentre(3),
+            getEdge(10).colour(0) == getCentre(5) && getEdge(10).colour(1) == getCentre(3),
+            getEdge(8).colour(0)  == getCentre(5) && getEdge(8).colour(1)  == getCentre(1)
         };
         int corrects = 0;
         for(int i = 0; i < 4; i++) {
@@ -214,9 +214,9 @@ public class Roux extends CFOP {
         }
         
         if(corrects == 0) {
-            if(getEdge(0).colour(0).equals(getCentre(0))) {
+            if(getEdge(0).colour(0) == getCentre(0)) {
                 updateThird("U2 M2 U2 M2");
-            } else if(getEdge(0).colour(1).equals(getCentre(1))) {
+            } else if(getEdge(0).colour(1) == getCentre(1)) {
                 updateThird("x' U2 M2 U2 M2");
             } else {
                 updateThird("E2 M E2 M");
@@ -230,8 +230,8 @@ public class Roux extends CFOP {
                 updateThird("M");
             }
 
-            if((getEdge(0).colour(0).equals(getCentre(5)) && getEdge(0).colour(1).equals(getCentre(1))) ||
-            (getEdge(0).colour(0).equals(getCentre(1)) && getEdge(0).colour(1).equals(getCentre(5)))) {
+            if((getEdge(0).colour(0) == getCentre(5) && getEdge(0).colour(1) == getCentre(1)) ||
+               (getEdge(0).colour(0) == getCentre(1) && getEdge(0).colour(1) == getCentre(5))) {
                 updateThird("M' U2 M U2");
             } else {
                 updateThird("U2 M' U2 M");

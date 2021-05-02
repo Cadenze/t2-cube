@@ -37,10 +37,10 @@ public class AdvRoux extends Roux {
         }
 
         boolean isSkipPair(int face) {
-            String colour1 = getCorner(face).colour(getSpin(face), 2);
+            Colour colour1 = getCorner(face).colour(getSpin(face), 2);
             int prev = (face + 3) % 4;
-            String colour2 = getCorner(prev).colour(getSpin(prev), 1);
-            return colour1.equals(colour2);
+            Colour colour2 = getCorner(prev).colour(getSpin(prev), 1);
+            return colour1 == colour2;
         }
 
         boolean consecutiveDuplicates() {
@@ -48,8 +48,8 @@ public class AdvRoux extends Roux {
         }
 
         boolean isYellowSkipPair(int face) {
-            String yellow = getCorner(face).colour(getSpin(face), 2);
-            return isSkipPair(face) && yellow.equals("y");
+            Colour yellow = getCorner(face).colour(getSpin(face), 2);
+            return isSkipPair(face) && yellow == Colour.YELLOW;
         }
 
         int findYellowSkipPair() {
@@ -63,7 +63,7 @@ public class AdvRoux extends Roux {
 
         boolean isTopPair(int face) {
             int position = (face + 3) % 4;
-            return getCorner(face).colour(getSpin(face), 0).equals(getCorner(position).colour(getSpin(position), 0));
+            return getCorner(face).colour(getSpin(face), 0) == getCorner(position).colour(getSpin(position), 0);
         }
 
         int[] findTopPair() {
@@ -85,7 +85,7 @@ public class AdvRoux extends Roux {
 
         int findYellowTopPair() {
             for(int i = 0; i < 4; i++) {
-                if(isTopPair(i) && getCorner(i).colour(getSpin(i), 0).equals("y")) {
+                if(isTopPair(i) && getCorner(i).colour(getSpin(i), 0) == Colour.YELLOW) {
                     return i;
                 }
             }
@@ -98,7 +98,7 @@ public class AdvRoux extends Roux {
 
         boolean isDiagonal(int corner) {
             int position = (corner + 2) % 4;
-            return getCorner(corner).colour(getSpin(corner), 0).equals(getCorner(position).colour(getSpin(position), 0));
+            return getCorner(corner).colour(getSpin(corner), 0) == getCorner(position).colour(getSpin(position), 0);
         }
 
         int findZero() {
@@ -107,10 +107,10 @@ public class AdvRoux extends Roux {
 
         boolean compareCorners(int spin, int side, int relative, int side2) {
             int position1 = findOnlySpin(spin);
-            String colour1 = getCorner(position1).colour(spin, side);
+            Colour colour1 = getCorner(position1).colour(spin, side);
             int position2 = (position1 + relative) % 4;
-            String colour2 = getCorner(position2).colour(getSpin(position2), side2);
-            return colour1.equals(colour2);
+            Colour colour2 = getCorner(position2).colour(getSpin(position2), side2);
+            return colour1 == colour2;
         }
 
         int findOnlySpin(int spin) {
@@ -488,18 +488,18 @@ public class AdvRoux extends Roux {
         void dock() {
             /* simple insert case */
             lr = new int[]{ findEdge(Edge.YELLOW_ORANGE), findEdge(Edge.YELLOW_RED) };
-            if((lr[0] == 2 || lr[0] == 10) && compareCells(0, 1, 1, 0) && compareCells(5, 7, 3, 0) && compileCell(3, 1).equals("y") && compileCell(3, 7).equals("y")) {
+            if((lr[0] == 2 || lr[0] == 10) && compareCells(0, 1, 1, 0) && compareCells(5, 7, 3, 0) && compileCell(3, 1) == Colour.YELLOW && compileCell(3, 7) == Colour.YELLOW) {
                 updateThird("M");
                 return;
-            } else if((lr[0] == 0 || lr[0] == 8) && compareCells(0, 7, 3, 0) && compareCells(5, 1, 1, 0) && compileCell(1, 1).equals("y") && compileCell(1, 7).equals("y")) {
+            } else if((lr[0] == 0 || lr[0] == 8) && compareCells(0, 7, 3, 0) && compareCells(5, 1, 1, 0) && compileCell(1, 1) == Colour.YELLOW && compileCell(1, 7) == Colour.YELLOW) {
                 updateThird("M'");
                 return;
             }
 
             /* dock case */
-            if((lr[0] == 2 || lr[0] == 10) && compileCell(3, 1).equals("y") && compileCell(3, 7).equals("y")) {
+            if((lr[0] == 2 || lr[0] == 10) && compileCell(3, 1) == Colour.YELLOW && compileCell(3, 7) == Colour.YELLOW) {
                 updateThird("M'");
-            } else if((lr[0] == 0 || lr[0] == 8) && compileCell(1, 1).equals("y") && compileCell(1, 7).equals("y")) {
+            } else if((lr[0] == 0 || lr[0] == 8) && compileCell(1, 1) == Colour.YELLOW && compileCell(1, 7) == Colour.YELLOW) {
                 updateThird("M");
             }
 
@@ -507,12 +507,12 @@ public class AdvRoux extends Roux {
         }
 
         void docked() {
-            String colour = getEdge(10).colour(1);
-            if(colour.equals(compileCell(1, 0))) {
+            Colour colour = getEdge(10).colour(1);
+            if(colour == compileCell(1, 0)) {
                 updateThird("M2");
-            } else if(colour.equals(compileCell(2, 0))) {
+            } else if(colour == compileCell(2, 0)) {
                 updateThird("U M2");
-            } else if(colour.equals(compileCell(3, 0))) {
+            } else if(colour == compileCell(3, 0)) {
                 updateThird("U2 M2");
             } else {
                 updateThird("U' M2");

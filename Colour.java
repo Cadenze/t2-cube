@@ -28,6 +28,14 @@ public enum Colour {
     }
 
     /**
+     * Returns the letter form of the colour.
+     * @return
+     */
+    public String getString() {
+        return getLetter();
+    }
+
+    /**
      * Returns the number form of the colour.
      * @return
      */

@@ -117,7 +117,7 @@ public class CFOP extends Solve {
         }
 
         void alignCross() {
-            int current = findCentre("r");
+            int current = findCentre(Colour.RED);
             switch(current) {
                 case 1: break;
                 case 2: updateFirst("y"); break;
@@ -1201,24 +1201,9 @@ public class CFOP extends Solve {
             Edge[] edges = { getEdge(0), getEdge(1), getEdge(2), getEdge(3) };
             colour = new int[4][3];
             for(int i = 0; i < 4; i++) {
-                colour[i][0] = colourIntoNumber(corners[(i + 3) % 4].colour(1));
-                colour[i][1] = colourIntoNumber(edges[i].colour(1));
-                colour[i][2] = colourIntoNumber(corners[i].colour(2));
-            }
-        }
-
-        /**
-         * Organizes the colours as numbers for easy comparison.
-         * @param colour Letter representing colour
-         * @return A number
-         */
-        int colourIntoNumber(String colour) {
-            switch(colour) {
-                case "r": return 1;
-                case "b": return 2;
-                case "o": return 3;
-                case "g": return 4;
-                default: return 0;
+                colour[i][0] = corners[(i + 3) % 4].colour(1).getNumber();
+                colour[i][1] = edges[i].colour(1).getNumber();
+                colour[i][2] = corners[i].colour(2).getNumber();
             }
         }
 
