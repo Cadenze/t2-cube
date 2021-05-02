@@ -1061,6 +1061,11 @@ public class Solve extends RubiksCube {
             return 0;
         }
 
+        /**
+         * Returns the regrips needed to perform the next move.
+         * @param move +1 for elevation, -1 for depression, and 2 for sublimation
+         * @return 1 if regrip; 0 if no
+         */
         int moveRight(int move) {
             if(right.length == 0) {
                 right = assign(move);

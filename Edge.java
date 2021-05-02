@@ -2,29 +2,28 @@
  * Lists the possible colours of the edges of a cube.
  */
 public enum Edge {
-    WHITE_RED     ("w", "r"),
-    WHITE_BLUE    ("w", "b"),
-    WHITE_ORANGE  ("w", "o"),
-    WHITE_GREEN   ("w", "g"),
-    RED_BLUE      ("r", "b"),
-    ORANGE_BLUE   ("o", "b"),
-    RED_GREEN     ("r", "g"),
-    ORANGE_GREEN  ("o", "g"),
-    YELLOW_RED    ("y", "r"),
-    YELLOW_BLUE   ("y", "b"),
-    YELLOW_ORANGE ("y", "o"),
-    YELLOW_GREEN  ("y", "g");
+    WHITE_RED     (Colour.WHITE,  Colour.RED),
+    WHITE_BLUE    (Colour.WHITE,  Colour.BLUE),
+    WHITE_ORANGE  (Colour.WHITE,  Colour.ORANGE),
+    WHITE_GREEN   (Colour.WHITE,  Colour.GREEN),
+    RED_BLUE      (Colour.RED,    Colour.BLUE),
+    ORANGE_BLUE   (Colour.ORANGE, Colour.BLUE),
+    RED_GREEN     (Colour.RED,    Colour.GREEN),
+    ORANGE_GREEN  (Colour.ORANGE, Colour.GREEN),
+    YELLOW_RED    (Colour.YELLOW, Colour.RED),
+    YELLOW_BLUE   (Colour.YELLOW, Colour.BLUE),
+    YELLOW_ORANGE (Colour.YELLOW, Colour.ORANGE),
+    YELLOW_GREEN  (Colour.YELLOW, Colour.GREEN);
 
-    private final String colour;
-    private final String colour1;
-    private static final String ERROR = "edge colour error.";
+    private final Colour colour;
+    private final Colour colour1;
 
     /**
      * Initializes the two colours of an edge.
      * @param c Main colour
      * @param d Secondary colour
      */
-    Edge(String c, String d) {
+    Edge(Colour c, Colour d) {
         colour = c;
         colour1 = d;
     }
@@ -34,7 +33,7 @@ public enum Edge {
      * @param number Direction
      * @return Colour
      */
-    public String colour(int number) {
+    public Colour colour(int number) {
         return colour(true, number);
     }
 
@@ -44,15 +43,7 @@ public enum Edge {
      * @param number Direction
      * @return Colour
      */
-    public String colour(boolean parity, int number) {
-        if(parity) {
-            if(number == 0) { return colour; }
-            else if (number == 1) { return colour1; }
-            else { System.out.println(ERROR); return "E"; }
-        } else {
-            if(number == 0) { return colour1; }
-            else if (number == 1) { return colour; }
-            else { System.out.println(ERROR); return "E"; }
-        }
+    public Colour colour(boolean parity, int number) {
+        return parity == (number == 0) ? colour : colour1;
     }
 }

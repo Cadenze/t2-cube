@@ -8,7 +8,7 @@ public class RubiksCube {
     private int[] spin;       /* 0 spin is white/yellow side up/down, count clockwise */
     private Edge[] edges;
     private boolean[] parity; /* true parity is for white/yellow/(red) facing not left/right */
-    private String[] centres;
+    private Colour[] centres;
 
     /**
      * Initializes a solved cube.
@@ -26,7 +26,7 @@ public class RubiksCube {
         };
         parity = new boolean[12];
         Arrays.fill(parity, true);
-        centres = new String[] { "w", "r", "b", "o", "g", "y"};
+        centres = new Colour[] { Colour.WHITE, Colour.RED, Colour.BLUE, Colour.ORANGE, Colour.GREEN, Colour.YELLOW};
     }
 
     /**
@@ -300,7 +300,7 @@ public class RubiksCube {
      * @param three o'clock position
      */
     private void spinCentre(int twelve, int nine, int six, int three) {
-        String temp = centres[twelve];
+        Colour temp = centres[twelve];
         centres[twelve] = centres[nine];
         centres[nine] = centres[six];
         centres[six] = centres[three];
@@ -426,7 +426,7 @@ public class RubiksCube {
      * @param face Specified face
      * @return The colour of the centre
      */
-    public String getCentre(int face) {
+    public Colour getCentre(int face) {
         return centres[face];
     }
 
@@ -494,9 +494,9 @@ public class RubiksCube {
      * @param colour Colour of the centre piece
      * @return Face of a cube
      */
-    public int findCentre(String colour) {
+    public int findCentre(Colour colour) {
         for(int i = 0; i < 6; i++) {
-            if(colour.equals(centres[i])) {
+            if(colour == centres[i]) {
                 return i;
             }
         }
@@ -523,7 +523,7 @@ public class RubiksCube {
     public String[] compileFace(int face) {
         String[] cell = new String[9];
         for(int i = 0; i < 9; i++) {
-            cell[i] = compileCell(face, i);
+            cell[i] = compileCell(face, i).getString();
         }
         return cell;
     }
@@ -534,7 +534,7 @@ public class RubiksCube {
      * @param cell
      * @return A string representing colour
      */
-    public String compileCell(int face, int cell) {
+    public Colour compileCell(int face, int cell) {
         final String error = "compileCell error.";
         if(cell == 4) {
             return centres[face];
@@ -628,7 +628,7 @@ public class RubiksCube {
             default:
                 System.out.println(error);
         }
-        return "";
+        return null;
     }
 
     /**
@@ -640,7 +640,7 @@ public class RubiksCube {
      * @return true if same, false if different
      */
     public boolean compareCells(int face1, int cell1, int face2, int cell2) {
-        return compileCell(face1, cell1).equals(compileCell(face2, cell2));
+        return compileCell(face1, cell1) == compileCell(face2, cell2);
     }
 
     /**
