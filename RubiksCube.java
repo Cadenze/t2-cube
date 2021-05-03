@@ -39,6 +39,36 @@ public class RubiksCube {
     }
 
     /**
+     * Deep copy constructor.
+     * Initializes an identical cube to the given cube.
+     * @param cube Cube to be duplicated
+     */
+    public RubiksCube(RubiksCube cube) {
+        this.corners = Arrays.copyOf(cube.corners, cube.corners.length);
+        this.spin = Arrays.copyOf(cube.spin, cube.spin.length);
+        this.edges = Arrays.copyOf(cube.edges, cube.edges.length);
+        this.parity = Arrays.copyOf(cube.parity, cube.parity.length);
+        this.centres = Arrays.copyOf(cube.centres, cube.centres.length);
+    }
+
+    /**
+     * Specified field constructor.
+     * Initializes a cube with given fields.
+     * @param corners 8 corners
+     * @param spin 8 spins
+     * @param edges 12 edges
+     * @param parity 12 parities
+     * @param centres 6 centres
+     */
+    public RubiksCube(Corner[] corners, int[] spin, Edge[] edges, boolean[] parity, Colour[] centres) {
+        this.corners = Arrays.copyOf(corners, corners.length);
+        this.spin = Arrays.copyOf(spin, spin.length);
+        this.edges = Arrays.copyOf(edges, edges.length);
+        this.parity = Arrays.copyOf(parity, parity.length);
+        this.centres = Arrays.copyOf(centres, centres.length);
+    }
+
+    /**
      * Takes in a move, parses the notation, and then executes it.
      * @param move Singmaster notation for a single move
      */
@@ -652,6 +682,39 @@ public class RubiksCube {
      */
     public boolean compareCells(int face, int cell1, int cell2) {
         return compareCells(face, cell1, face, cell2);
+    }
+
+    /**
+     * Compares whether the cubes are identical, taking into account wildcard cubelets.
+     * @param cube Cube to be compared with
+     * @return true if same, false if different
+    */
+    public boolean compareCube(RubiksCube cube) {
+        for(int i = 0; i < 8; i++) {
+            if(!(corners[i] == cube.corners[i] && spin[i] == cube.spin[i] || corners[i].compare(cube.corners[i]))) {
+                return false;
+            }
+        }
+        for(int i = 0; i < 12; i++) {
+            if(!(edges[i] == cube.edges[i] && parity[i] == cube.parity[i] || edges[i].compare(cube.edges[i]))) {
+                return false;
+            }
+        }
+        for(int i = 0; i < 6; i++) {
+            if(!centres[i].compare(cube.centres[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Compares whether the cubes are identical, taking into account wildcard cubelets.
+     * @param cube Cube to be compared with
+     * @return true if same, false if different
+    */
+    public boolean compare(RubiksCube cube) {
+        return compareCube(cube);
     }
 
     /**
