@@ -2,18 +2,19 @@
  * Lists the possible colours of the edges of a cube.
  */
 public enum Edge {
-    WHITE_RED     (Colour.WHITE,  Colour.RED),
-    WHITE_BLUE    (Colour.WHITE,  Colour.BLUE),
-    WHITE_ORANGE  (Colour.WHITE,  Colour.ORANGE),
-    WHITE_GREEN   (Colour.WHITE,  Colour.GREEN),
-    RED_BLUE      (Colour.RED,    Colour.BLUE),
-    ORANGE_BLUE   (Colour.ORANGE, Colour.BLUE),
-    RED_GREEN     (Colour.RED,    Colour.GREEN),
-    ORANGE_GREEN  (Colour.ORANGE, Colour.GREEN),
-    YELLOW_RED    (Colour.YELLOW, Colour.RED),
-    YELLOW_BLUE   (Colour.YELLOW, Colour.BLUE),
-    YELLOW_ORANGE (Colour.YELLOW, Colour.ORANGE),
-    YELLOW_GREEN  (Colour.YELLOW, Colour.GREEN);
+    WHITE_RED     (Colour.WHITE,    Colour.RED),
+    WHITE_BLUE    (Colour.WHITE,    Colour.BLUE),
+    WHITE_ORANGE  (Colour.WHITE,    Colour.ORANGE),
+    WHITE_GREEN   (Colour.WHITE,    Colour.GREEN),
+    RED_BLUE      (Colour.RED,      Colour.BLUE),
+    ORANGE_BLUE   (Colour.ORANGE,   Colour.BLUE),
+    RED_GREEN     (Colour.RED,      Colour.GREEN),
+    ORANGE_GREEN  (Colour.ORANGE,   Colour.GREEN),
+    YELLOW_RED    (Colour.YELLOW,   Colour.RED),
+    YELLOW_BLUE   (Colour.YELLOW,   Colour.BLUE),
+    YELLOW_ORANGE (Colour.YELLOW,   Colour.ORANGE),
+    YELLOW_GREEN  (Colour.YELLOW,   Colour.GREEN),
+    WILDCARD      (Colour.WILDCARD, Colour.WILDCARD);
 
     private final Colour colour;
     private final Colour colour1;
@@ -45,5 +46,18 @@ public enum Edge {
      */
     public Colour colour(boolean parity, int number) {
         return parity == (number == 0) ? colour : colour1;
+    }
+
+    /**
+     * Compares the two edges, taking into account that one of the edges might be a WILDCARD.
+     * @param edge other edge
+     * @return true if same/wildcard; false if not
+     */
+    public boolean compare(Edge edge) {
+        if(edge == Edge.WILDCARD || this == Edge.WILDCARD) {
+            return true;
+        } else {
+            return this == edge;
+        }
     }
 }

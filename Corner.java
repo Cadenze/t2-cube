@@ -9,7 +9,8 @@ public enum Corner {
     YELLOW_RED_BLUE      (Colour.YELLOW, Colour.RED,    Colour.BLUE),
     YELLOW_BLUE_ORANGE   (Colour.YELLOW, Colour.BLUE,   Colour.ORANGE),
     YELLOW_ORANGE_GREEN  (Colour.YELLOW, Colour.ORANGE, Colour.GREEN),
-    YELLOW_GREEN_RED     (Colour.YELLOW, Colour.GREEN,  Colour.RED);
+    YELLOW_GREEN_RED     (Colour.YELLOW, Colour.GREEN,  Colour.RED),
+    WILDCARD             (Colour.WILDCARD, Colour.WILDCARD, Colour.WILDCARD);
 
     private final Colour colour;
     private final Colour colour1;
@@ -58,6 +59,14 @@ public enum Corner {
                 if(number == 0)      { return colour1; }
                 else if(number == 1) { return colour2; }
                 else                 { return colour; }
+        }
+    }
+
+    public boolean compare(Corner corner) {
+        if(corner == Corner.WILDCARD || this == Corner.WILDCARD) {
+            return true;
+        } else {
+            return this == corner;
         }
     }
 }
