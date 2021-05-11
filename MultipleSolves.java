@@ -57,86 +57,39 @@ public class MultipleSolves {
         }
 
         final String header = "Scramble,Solved?,QTM,HTM,STM,AHTM,ASTM,NRHTM,NRSTM";
-        switch(type) {
-            case "Beginners": case "Beginner": case "beginners": case "beginner":
-            try (
-                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
-                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
-            ) {
-                pen.write(header);
-                pen.newLine();
-                while(explorer.hasNextLine()) {
-                    String sequence = explorer.nextLine();
-                    Solve cube = new Solve(sequence);
-                    boolean solved = cube.checkSolved();
-                    int qtm = cube.getQTM();
-                    int htm = cube.getHTM();
-                    int stm = cube.getSTM();
-                    int ahtm = cube.getAHTM();
-                    int astm = cube.getASTM();
-                    int nrhtm = cube.getNRHTM();
-                    int nrstm = cube.getNRSTM();
-                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
-                    pen.newLine();
+        try (
+            Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
+            BufferedWriter pen = new BufferedWriter(new FileWriter(output));
+        ) {
+            pen.write(header);
+            pen.newLine();
+            while(explorer.hasNextLine()) {
+                String sequence = explorer.nextLine();
+                Solve cube;
+                switch(type) {
+                    case "Beginners": case "Beginner": case "beginners": case "beginner":
+                        cube = new Solve(sequence); break;
+                    case "CFOP": case "cfop": case "Fridrich": case "fridrich":
+                        cube = new CFOP(sequence); break;
+                    case "Roux": case "roux":
+                        cube =  new AdvRoux(sequence); break;
+                    default:
+                        System.out.println("Method currently does not exist."); return;
                 }
-            } catch(IOException e) {
-                System.out.println(ERROR);
-                e.printStackTrace();
-            } break;
-
-            case "CFOP": case "cfop": case "Fridrich": case "fridrich":
-            try (
-                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
-                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
-            ) {
-                pen.write(header);
+                boolean solved = cube.checkSolved();
+                int qtm = cube.getQTM();
+                int htm = cube.getHTM();
+                int stm = cube.getSTM();
+                int ahtm = cube.getAHTM();
+                int astm = cube.getASTM();
+                int nrhtm = cube.getNRHTM();
+                int nrstm = cube.getNRSTM();
+                pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
                 pen.newLine();
-                while(explorer.hasNextLine()) {
-                    String sequence = explorer.nextLine();
-                    CFOP cube = new CFOP(sequence);
-                    boolean solved = cube.checkSolved();
-                    int qtm = cube.getQTM();
-                    int htm = cube.getHTM();
-                    int stm = cube.getSTM();
-                    int ahtm = cube.getAHTM();
-                    int astm = cube.getASTM();
-                    int nrhtm = cube.getNRHTM();
-                    int nrstm = cube.getNRSTM();
-                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
-                    pen.newLine();
-                }
-            } catch(IOException e) {
-                System.out.println(ERROR);
-                e.printStackTrace();
-            } break;
-
-            case "Roux": case "roux":
-            try (
-                Scanner explorer = new Scanner(new BufferedReader(new FileReader(file)));
-                BufferedWriter pen = new BufferedWriter(new FileWriter(output));
-            ) {
-                pen.write(header);
-                pen.newLine();
-                while(explorer.hasNextLine()) {
-                    String sequence = explorer.nextLine();
-                    AdvRoux cube = new AdvRoux(sequence);
-                    boolean solved = cube.checkSolved();
-                    int qtm = cube.getQTM();
-                    int htm = cube.getHTM();
-                    int stm = cube.getSTM();
-                    int ahtm = cube.getAHTM();
-                    int astm = cube.getASTM();
-                    int nrhtm = cube.getNRHTM();
-                    int nrstm = cube.getNRSTM();
-                    pen.write(sequence + "," + solved + "," + qtm + "," + htm + "," + stm + "," + ahtm + "," + astm + "," + nrhtm + "," + nrstm);
-                    pen.newLine();
-                }
-            } catch(IOException e) {
-                System.out.println(ERROR);
-                e.printStackTrace();
-            } break;
-
-            default: System.out.println("Method currently does not exist.");
+            }
+        } catch(IOException e) {
+            System.out.println(ERROR);
+            e.printStackTrace();
         }
     }
 }
